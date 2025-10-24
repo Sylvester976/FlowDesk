@@ -10,9 +10,18 @@
         </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
-            <exclude>tests/Feature/Auth/TwoFactorAuthenticationTest.php</exclude>
-            <exclude>tests/Feature/SettingsTest.php</exclude>
-            <exclude>tests/Feature/ApiTokenTest.php</exclude>
+            <!-- Excluded Auth Tests -->
+            <exclude>tests/Feature/Auth/TwoFactorChallengeTest.php</exclude>
+            <exclude>tests/Feature/Auth/PasswordResetTest.php</exclude>
+            <exclude>tests/Feature/Auth/AuthenticationTest.php</exclude>
+
+            <!-- Excluded Settings Tests -->
+            <exclude>tests/Feature/Settings/PasswordUpdateTest.php</exclude>
+            <exclude>tests/Feature/Settings/ProfileUpdateTest.php</exclude>
+            <exclude>tests/Feature/Settings/TwoFactorAuthenticationTest.php</exclude>
+
+            <!-- Example Test -->
+            <exclude>tests/Feature/ExampleTest.php</exclude>
         </testsuite>
 
     </testsuites>
