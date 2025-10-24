@@ -235,25 +235,37 @@
                 <form class="d-flex mx-auto" style="max-width: 500px; width: 100%;">
                 </form>
                 <div class="dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                       data-bs-toggle="dropdown">
-                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=0d6efd&color=fff"
-                             class="rounded-circle me-2" width="35" height="35" alt="User">
-                        <span class="d-none d-md-inline">Admin User</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i> Profile</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i> Settings</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <button class="dropdown-item" type="submit">Logout</button>
-                            </form>
-                        </li>
-                    </ul>
+                    @auth
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=0d6efd&color=fff"
+                                 class="rounded-circle me-2" width="35" height="35" alt="{{ Auth::user()->name }}">
+                            <span class="d-none d-md-inline">{{ Auth::user()->name }}</span>
+                        </a>
+                    @endauth
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 py-2">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center py-2" href="{{ route('profile.edit') }}">
+                                    <i class="fas fa-user-circle fa-lg text-primary me-3"></i>
+                                    <span>Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center py-2" href="#">
+                                    <i class="fas fa-cog fa-lg text-secondary me-3"></i>
+                                    <span>Settings</span>
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider my-2"></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button class="dropdown-item d-flex align-items-center text-danger py-2" type="submit">
+                                        <i class="fas fa-sign-out-alt fa-lg me-3"></i>
+                                        <span>Logout</span>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                 </div>
             </div>
         </nav>
