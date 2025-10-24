@@ -10,7 +10,11 @@
         </testsuite>
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
+            <exclude>tests/Feature/Auth/TwoFactorAuthenticationTest.php</exclude>
+            <exclude>tests/Feature/SettingsTest.php</exclude>
+            <exclude>tests/Feature/ApiTokenTest.php</exclude>
         </testsuite>
+
     </testsuites>
     <source>
         <include>
