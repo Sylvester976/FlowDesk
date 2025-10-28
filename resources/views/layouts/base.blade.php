@@ -36,7 +36,7 @@
 
             <ul class="nav flex-column mt-3">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#" data-section="dashboard">
+                    <a class="nav-link active" href="{{ route('dashboard') }}" data-section="dashboard">
                         <svg fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
@@ -58,7 +58,7 @@
                     </a>
                     <ul class="nav flex-column collapse submenu" id="employeesMenu">
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="all-employees">
+                            <a class="nav-link" href="{{ route('employees') }}" data-section="all-employees">
                                 <svg fill="currentColor" viewBox="0 0 24 24">
                                     <path
                                         d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
