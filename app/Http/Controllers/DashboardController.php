@@ -14,6 +14,11 @@ class DashboardController extends Controller
     {
         return view('dashboard.dashboard');
     }
+
+    public function dashboardStaff()
+    {
+        return view('dashboard.dashboard_staff');
+    }
     public function save_staff(Request $request)
     {
         // Validate inputs

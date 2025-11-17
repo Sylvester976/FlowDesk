@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -25,22 +26,38 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         try {
-            $request->authenticate(); // Attempt login
-            $request->session()->regenerate(); // Prevent session fixation
 
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'Login successful! Redirecting...',
-                'redirect_url' => route('dashboard'), // Breeze redirect
-            ]);
+            // First attempt login — this already checks email + password
+            $request->authenticate();
+            $request->session()->regenerate();
+
+            // Now get authenticated user
+            $user = auth()->user();  // <-- IMPORTANT FIX
+
+            // Role check
+            if ($user->role != 2) {
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => 'Login successful! Redirecting...',
+                    'redirect_url' => route('dashboard'),
+                ]);
+            } else {
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => 'Login successful! Redirecting...',
+                    'redirect_url' => route('dashboard-staff'),
+                ]);
+            }
+
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Invalid credentials
+
             return response()->json([
                 'status'  => 'error',
                 'message' => 'Invalid email or password.',
             ], 401);
+
         } catch (\Throwable $e) {
-            // Log actual error for debugging
+
             \Log::error('Login error: '.$e->getMessage());
 
             return response()->json([
@@ -49,6 +66,7 @@ class AuthenticatedSessionController extends Controller
             ], 500);
         }
     }
+
 
 
 

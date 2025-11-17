@@ -19,6 +19,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::get('/dashboard-staff', [DashboardController::class, 'dashboardStaff'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard-staff');
+
 Route::get('/employees', [UserController::class, 'showAllEmployees'])
     ->middleware(['auth', 'verified'])
     ->name('employees');
