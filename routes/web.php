@@ -23,4 +23,13 @@ Route::get('/employees', [UserController::class, 'showAllEmployees'])
     ->middleware(['auth', 'verified'])
     ->name('employees');
 
+Route::get('/employee_add', [UserController::class, 'addEmployee'])
+    ->middleware(['auth', 'verified'])
+    ->name('employee_add');
+
+Route::post('/save_staff', [DashboardController::class, 'save_staff'])
+    ->middleware(['auth', 'verified'])
+    ->name('save_staff');
+
+
 require __DIR__.'/auth.php';

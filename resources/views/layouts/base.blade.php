@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Civil Tacker</title>
     <link href="{{ asset ('images/cos.ico') }}" rel="icon" type="image/x-icon">
     <link href="{{ asset ('css/tabler.css') }}" rel="stylesheet"/>
@@ -11,6 +12,7 @@
     <link href="{{ asset ('css/select2.min.css') }}" rel="stylesheet"/>
     <link href="{{ asset ('css/datatable/dataTables.css') }}" rel="stylesheet"/>
     <link href="{{ asset ('css/datatable/buttons.dataTables.css') }}" rel="stylesheet"/>
+    <link href="{{ asset ('css/notyf.min.css') }}" rel="stylesheet"/>
 </head>
 <body>
 <div class="loader-overlay" id="site-loader">
@@ -76,7 +78,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="add-employee">
+                            <a class="nav-link" href="{{ route('employee_add') }}" data-section="add-employee">
                                 <svg fill="currentColor" viewBox="0 0 24 24">
                                     <path
                                         d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -286,6 +288,8 @@
 <script src="{{ asset ('js/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ asset('js/select2.min.js') }}"></script>
 <script src="{{ asset ('js/swal.js') }}"></script>
+<script src="{{ asset ('js/notyf.min.js') }}"></script>
+<script src="{{ asset ('js/extra/notfy_setting.js') }}"></script>
 <script src="{{ asset ('js/external.js') }}"></script>
 <script src="{{ asset ('js/sidebar/sidebar.js') }}"></script>
 <script src="{{ asset ('js/datatable/dataTables.js') }}"></script>

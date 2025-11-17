@@ -30,16 +30,14 @@
                             @forelse($allUsers as $user)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{$user->name}}</td>
+                                    <td>{{$user->name}} {{$user->surname}} {{$user->other_names}}</td>
                                     <td>{{$user->email}}</td>
-                                    <td>{{$user->name}}</td>
-                                    <td><{{$user->name}}/td>
-                                    <td>{{$user->name}}</td>
-                                    <td><{{$user->email}}/td>
+                                    <td>{{$user->idNumber}}</td>
+                                    <td>{{$user->pfNumber}}</td>
+                                    <td>{{$user->designation}}</td>
+                                    <td>{{ strtoupper($user->status)}}</td>
                                     <td class="table-actions">
-                                        <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i>
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-pencil"></i>
                                         </button>
                                     </td>
                                 </tr>
