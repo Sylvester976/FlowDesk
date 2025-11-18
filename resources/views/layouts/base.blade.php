@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Civil Tacker</title>
+    <title>Travel Tacker</title>
     <link href="{{ asset ('images/cos.ico') }}" rel="icon" type="image/x-icon">
     <link href="{{ asset ('css/tabler.css') }}" rel="stylesheet"/>
     <link href="{{ asset ('css/tracker.css') }}" rel="stylesheet"/>
@@ -15,8 +15,15 @@
     <link href="{{ asset ('css/notyf.min.css') }}" rel="stylesheet"/>
 </head>
 <body>
-<div class="loader-overlay" id="site-loader">
-    <div class="loader"></div>
+<!-- Page Loader -->
+<div id="pageLoader">
+    <div class="text-center">
+        <div class="airplane">✈️</div>
+        <h3 class="mt-3 text-primary fw-bold">Travel Tracker</h3>
+        <div class="spinner-border text-primary mt-3" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 </div>
 <div class="page" id="all-contents">
 
@@ -302,9 +309,15 @@
 <script src="{{ asset ('js/datatable/buttons.print.min.js') }}"></script>
 <script src="{{ asset ('js/table/datatables.js') }}"></script>
 <script>
-    window.addEventListener('load', () => {
-        document.getElementById('site-loader').style.display = 'none';
-        document.getElementById('all-contents').style.display = 'block';
+    // Hide loader when page is fully loaded
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            const loader = document.getElementById('pageLoader');
+            loader.classList.add('fade-out');
+            setTimeout(function() {
+                loader.style.display = 'none';
+            }, 500);
+        }, 1000); // Show loader for at least 1 second
     });
 </script>
 </body>
