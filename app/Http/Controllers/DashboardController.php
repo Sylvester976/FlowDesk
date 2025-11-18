@@ -71,4 +71,8 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function assignmentAdd(){
+        return view('assignments.assignment_add');
+    }
+
 }

@@ -13,6 +13,7 @@ class Assignment extends Model
 
     protected $fillable = [
         'user_id',
+        'name',
         'country_of_visit',
         'county',
         'subcounty',
@@ -20,6 +21,7 @@ class Assignment extends Model
         'city',
         'supervisor_name',
         'supervisor_email',
+        'status',
         'start_date',
         'end_date',
     ];

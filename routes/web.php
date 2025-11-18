@@ -35,5 +35,9 @@ Route::post('/save_staff', [DashboardController::class, 'save_staff'])
     ->middleware(['auth', 'verified'])
     ->name('save_staff');
 
+Route::get('/assignment_add', [DashboardController::class, 'assignmentAdd'])
+    ->middleware(['auth', 'verified'])
+    ->name('assignment_add');
+
 
 require __DIR__.'/auth.php';
