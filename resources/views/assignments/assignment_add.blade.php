@@ -20,28 +20,47 @@
                 <form id="registerForm" method="post">
                     <div class="card-body">
                         <div class="row g-3 mb-4">
-                            <div class="col-md-6">
-                                <label class="form-label required">First Name</label>
-                                <input type="text" class="form-control" name="first_name" placeholder="Enter first name"
-                                       required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label required">Surname</label>
-                                <input type="text" class="form-control" name="surname" placeholder="Enter Surname"
+                            <div class="col-md-12">
+                                <label class="form-label required">Name of Assignment</label>
+                                <input type="text" class="form-control" name="assignment_name" placeholder="Enter the name of assignment"
                                        required>
                             </div>
                         </div>
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control" name="last_name"
-                                       placeholder="Enter last name (optional)">
+                                <label class="form-label required">Country of Visit</label>
+                                <select id="country_of_visit" name="country_of_visit" class="form-control" required>
+                                    <option value="">Select your country</option>
+                                    @foreach($countries as $country)
+                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+
+                            <div class="col-md-6" id="county-wrapper" style="display: none;">
+                                <label class="form-label required">County</label>
+                                <select id="county" name="county" class="form-control">
+                                    <option value="">Select county</option>
+                                    @foreach($counties as $county)
+                                        <option value="{{ $county->id }}">{{ $county->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6" id="subcounty-wrapper" style="display: none;">
+                                <label class="form-label required">Subcounty</label>
+                                <select id="subcounty" name="subcounty" class="form-control">
+                                    <option value="">Select subcounty</option>
+                                </select>
+                            </div>
+
                             <div class="col-md-6">
-                                <label class="form-label">Identification Number</label>
-                                <input type="number" class="form-control" name="idno" placeholder="e.g., 12345678">
+                                <label class="form-label">City/Town</label>
+                                <input type="text" class="form-control" name="city"
+                                       placeholder="e.g., Nairobi, Kisumu">
                             </div>
                         </div>
+
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
                                 <label class="form-label">Email</label>
@@ -84,6 +103,7 @@
             </div>
         </div>
     </div>
+    <script src="{{ asset ('js/jquery-3.7.1.min.js') }}"></script>
     <script>
         document.getElementById('registerForm').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -116,6 +136,40 @@
                 .catch(() => {
                     notyf.error('Something went wrong. Try again later.');
                 });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#country_of_visit').on('change', function() {
+                if ($(this).val() == 87) {
+                    $('#county-wrapper').show();
+                } else {
+                    $('#county-wrapper').hide();
+                    $('#subcounty-wrapper').hide();
+                    $('#county').val(null).trigger('change');
+                    $('#subcounty').val(null).trigger('change');
+                }
+            });
+
+            $('#county').on('change', function() {
+                var countyId = $(this).val();
+                if(countyId) {
+                    $.ajax({
+                        url: '/subcounties/' + countyId,
+                        type: 'GET',
+                        success: function(data) {
+                            $('#subcounty').empty().append('<option value="">Select subcounty</option>');
+                            data.forEach(function(subcounty) {
+                                $('#subcounty').append('<option value="'+subcounty.id+'">'+subcounty.name+'</option>');
+                            });
+                            $('#subcounty-wrapper').show();
+                        }
+                    });
+                } else {
+                    $('#subcounty-wrapper').hide();
+                    $('#subcounty').val(null).trigger('change');
+                }
+            });
         });
     </script>
 @endsection

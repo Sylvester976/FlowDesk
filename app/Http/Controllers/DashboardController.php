@@ -3,16 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Country;
+use App\Models\County;
+use App\Models\Subcounty;
 use App\Mail\StaffRegistered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+
 
 class DashboardController extends Controller
 {
     public function index()
     {
         return view('dashboard.dashboard');
+    }
+
+    public function getSubcounties($countyId)
+    {
+        $subcounties = Subcounty::where('county_id', $countyId)->get();
+        return response()->json($subcounties);
     }
 
     public function dashboardStaff()
@@ -71,8 +81,18 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function assignmentAdd(){
-        return view('assignments.assignment_add');
+    public function assignmentAdd() {
+        $countries = Country::all();
+        $counties = County::all();
+
+        $data = array(
+            'countries' => $countries,
+            'counties' => $counties
+        );
+
+        return view('assignments.assignment_add', $data);
     }
+
+
 
 }

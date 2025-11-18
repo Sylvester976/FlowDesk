@@ -38,6 +38,9 @@ Route::post('/save_staff', [DashboardController::class, 'save_staff'])
 Route::get('/assignment_add', [DashboardController::class, 'assignmentAdd'])
     ->middleware(['auth', 'verified'])
     ->name('assignment_add');
+Route::get('/subcounties/{county}', [DashboardController::class, 'getSubcounties']);
+
+
 
 
 require __DIR__.'/auth.php';
