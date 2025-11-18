@@ -60,4 +60,10 @@ class User extends Authenticatable
     {
         $this->notify(new CustomResetPassword($token));
     }
+
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
 }
