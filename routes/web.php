@@ -39,6 +39,9 @@ Route::get('/assignment_add', [DashboardController::class, 'assignmentAdd'])
     ->middleware(['auth', 'verified'])
     ->name('assignment_add');
 Route::get('/subcounties/{county}', [DashboardController::class, 'getSubcounties']);
+Route::post('/save_assignment', [DashboardController::class, 'save_assignment'])
+    ->middleware(['auth', 'verified'])
+    ->name('save_assignment');
 
 
 

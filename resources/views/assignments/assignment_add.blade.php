@@ -17,7 +17,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Assignment Form</h3>
                 </div>
-                <form id="registerForm" method="post">
+                <form id="assignmentForm" method="post" enctype="multipart/form-data">
                     <div class="card-body">
                         <div class="row g-3 mb-4">
                             <div class="col-md-12">
@@ -93,12 +93,12 @@
                         </div>
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label required">Date of Birth</label>
-                                <input type="date" class="form-control" name="date_of_birth" required>
+                                <label class="form-label required">Start Date of Assignment</label>
+                                <input type="date" class="form-control" name="start" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label required">Date of Appointment</label>
-                                <input type="date" class="form-control" name="date_of_appointment" required>
+                                <label class="form-label required">End Date of Assignment</label>
+                                <input type="date" class="form-control" name="end" required>
                             </div>
                         </div>
                     </div>
@@ -112,13 +112,13 @@
     </div>
     <script src="{{ asset ('js/jquery-3.7.1.min.js') }}"></script>
     <script>
-        document.getElementById('registerForm').addEventListener('submit', function (e) {
+        document.getElementById('assignmentForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
             const formData = new FormData(this);
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            fetch("{{ route('save_staff') }}", {
+            fetch("{{ route('save_assignment') }}", {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
