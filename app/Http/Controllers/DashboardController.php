@@ -211,5 +211,24 @@ class DashboardController extends Controller
 
     }
 
+    public function assign_history(){
+
+        $data = array(
+            'assignments' => Assignment::where('user_id', auth()->id())->get(),
+        );
+
+        return view('assignments.assignment_history', $data);
+
+
+    }
+
+    public function viewMoreInfo($id){
+        $data = array(
+            'assignment' => Assignment::where('id', $id)->get(),
+            'attachments' => AssignmentAttachment::where('assignment_id', $id)->get()
+        );
+        return view('assignments.viewMore', $data);
+    }
+
 
 }

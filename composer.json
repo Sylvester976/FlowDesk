@@ -82,8 +82,8 @@
         "post-install-cmd": [
             "@php artisan migrate --force",
             "@php artisan countries:install",
-            "@php artisan db:seed --class=CountySeeder",
-            "@php artisan db:seed --class=SubcountySeeder"
+            "@php artisan db:seed --class=CountySeeder --force || true",
+            "@php artisan db:seed --class=SubcountySeeder --force || true"
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
