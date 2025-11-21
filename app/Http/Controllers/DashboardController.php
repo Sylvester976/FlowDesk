@@ -35,8 +35,50 @@ class DashboardController extends Controller
 
     public function dashboardStaff()
     {
-        return view('dashboard.dashboard_staff');
+        $user_id = auth()->id();
+
+        // Number of assignments
+        $mytrips = Assignment::where('user_id', $user_id)->count();
+
+        // Number of pending assignments
+        $active_assignments = Assignment::where('user_id', $user_id)
+            ->where('status', 'pending')
+            ->count();
+
+        // Number of countries visited (not Kenya = id 87)
+        $countries_visited = Assignment::where('user_id', $user_id)
+            ->where('country_of_visit', '!=', 87)
+            ->count();
+
+        $kenya_places = ($mytrips - $countries_visited);
+
+        // Get latest pending assignment (latest created)
+        $current_assignment = Assignment::where('user_id', $user_id)
+            ->where('status', 'pending')
+            ->latest()
+            ->first();
+
+        // Current assignment name
+        $current_assignment_name = $current_assignment?->assignment_name ?? 'N/A';
+        $current_assignment_country = getCountryName($current_assignment?->country_of_visit ) ?? 'N/A';
+
+        // Format end date as (M d, Y) e.g. "Nov 21, 2025"
+        $current_assignment_end_date = $current_assignment?->end_date
+            ? \Carbon\Carbon::parse($current_assignment->end_date)->format('M d, Y')
+            : 'N/A';
+
+        return view('dashboard.dashboard_staff', [
+            'mytrips' => $mytrips,
+            'active_assignments' => $active_assignments,
+            'countries_visited' => $countries_visited,
+            'kenya_places' => $kenya_places,
+            'current_assignment' => $current_assignment,
+            'current_assignment_name' => $current_assignment_name,
+            'current_assignment_end_date' => $current_assignment_end_date,
+            'current_assignment_country' => $current_assignment_country,
+        ]);
     }
+
 
     public function save_staff(Request $request)
     {
@@ -205,7 +247,7 @@ class DashboardController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Assignment Registered successfully!',
+          'message' => 'Assignment Registered successfully!',
         ]);
 
 
