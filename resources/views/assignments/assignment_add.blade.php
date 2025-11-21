@@ -91,14 +91,17 @@
                                 <small class="form-text" id="emailFeedback"></small>
                             </div>
                         </div>
+                        @php
+                            $sixMonthsAgo = date('Y-m-d', strtotime('-6 months'));
+                        @endphp
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
                                 <label class="form-label required">Start Date of Assignment</label>
-                                <input type="date" class="form-control" name="start" required>
+                                <input type="date" class="form-control" name="start" required min="{{ $sixMonthsAgo }}">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label required">End Date of Assignment</label>
-                                <input type="date" class="form-control" name="end" required>
+                                <input type="date" class="form-control" name="end" required min="{{ $sixMonthsAgo }}">
                             </div>
                         </div>
                     </div>

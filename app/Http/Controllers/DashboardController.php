@@ -172,17 +172,17 @@ class DashboardController extends Controller
             $assignmentMessage .= '<tr><td><strong>Assignment Name</strong></td><td>' . $assignment->assignment_name . '</td></tr>';
 
             if ($assignment->country_of_visit == 87) {
-                $assignmentMessage .= '<tr><td><strong>County</strong></td><td>' . $assignment->countyName . '</td></tr>';
-                $assignmentMessage .= '<tr><td><strong>Subcounty</strong></td><td>' . $assignment->subcountyName . '</td></tr>';
+                $assignmentMessage .= '<tr><td><strong>County</strong></td><td>' . getCountyName($request->county) . '</td></tr>';
+                $assignmentMessage .= '<tr><td><strong>Subcounty</strong></td><td>' . getSubcountyName($request->subcounty) . '</td></tr>';
                 $assignmentMessage .= '<tr><td><strong>City</strong></td><td>' . $assignment->city . '</td></tr>';
             } else {
-                $assignmentMessage .= '<tr><td><strong>Country</strong></td><td>' . $assignment->countryName . '</td></tr>';
+                $assignmentMessage .= '<tr><td><strong>Country</strong></td><td>' . getCountryName($request->country_of_visit) . '</td></tr>';
                 $assignmentMessage .= '<tr><td><strong>City</strong></td><td>' . $assignment->city . '</td></tr>';
             }
 
-            $assignmentMessage .= '<tr><td><strong>Start Date</strong></td><td>' . \Carbon\Carbon::parse($assignment->start_date)->format('d M Y') . '</td></tr>';
+            $assignmentMessage .= '<tr><td><strong>Start Date</strong></td><td>' . Carbon::parse($assignment->start_date)->format('d M Y') . '</td></tr>';
             if ($assignment->end_date) {
-                $assignmentMessage .= '<tr><td><strong>End Date</strong></td><td>' . \Carbon\Carbon::parse($assignment->end_date)->format('d M Y') . '</td></tr>';
+                $assignmentMessage .= '<tr><td><strong>End Date</strong></td><td>' . Carbon::parse($assignment->end_date)->format('d M Y') . '</td></tr>';
             }
             $assignmentMessage .= '</table>';
 
@@ -190,7 +190,6 @@ class DashboardController extends Controller
             $assignmentMessage .= '<p>I appreciate your guidance and support regarding this assignment. Please let me know if there are any specific instructions or clarifications needed.</p>';
             $assignmentMessage .= '<p>Thank you.</p>';
             $assignmentMessage .= '<p>Best regards,<br>Your Name</p>';
-
 
 
             // Send email
