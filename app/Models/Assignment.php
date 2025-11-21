@@ -13,6 +13,7 @@ class Assignment extends Model
 
     protected $fillable = [
         'user_id',
+        'assignment_name',
         'name',
         'country_of_visit',
         'county',

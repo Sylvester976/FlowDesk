@@ -21,6 +21,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        if ($redirect = checkLegitUser()) {
+            return $redirect; // redirect if not allowed
+        }
         return view('dashboard.dashboard');
     }
 
@@ -153,6 +156,7 @@ class DashboardController extends Controller
             }
         }
 
+
         try {
             $assignmentMessage = '';
 
@@ -168,11 +172,11 @@ class DashboardController extends Controller
             $assignmentMessage .= '<tr><td><strong>Assignment Name</strong></td><td>' . $assignment->assignment_name . '</td></tr>';
 
             if ($assignment->country_of_visit == 87) {
-                $assignmentMessage .= '<tr><td><strong>County</strong></td><td>' . $assignment->countyName() . '</td></tr>';
-                $assignmentMessage .= '<tr><td><strong>Subcounty</strong></td><td>' . $assignment->subcountyName() . '</td></tr>';
+                $assignmentMessage .= '<tr><td><strong>County</strong></td><td>' . $assignment->countyName . '</td></tr>';
+                $assignmentMessage .= '<tr><td><strong>Subcounty</strong></td><td>' . $assignment->subcountyName . '</td></tr>';
                 $assignmentMessage .= '<tr><td><strong>City</strong></td><td>' . $assignment->city . '</td></tr>';
             } else {
-                $assignmentMessage .= '<tr><td><strong>Country</strong></td><td>' . $assignment->countryName() . '</td></tr>';
+                $assignmentMessage .= '<tr><td><strong>Country</strong></td><td>' . $assignment->countryName . '</td></tr>';
                 $assignmentMessage .= '<tr><td><strong>City</strong></td><td>' . $assignment->city . '</td></tr>';
             }
 

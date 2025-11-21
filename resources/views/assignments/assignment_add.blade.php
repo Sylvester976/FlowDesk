@@ -130,7 +130,7 @@
                 .then(data => {
                     if (data.status === 'success') {
                         notyf.success(data.message);
-                        document.getElementById('registerForm').reset();
+                        document.getElementById('assignmentForm').reset();
 
                         setTimeout(() => {
                             window.location.href = "{{ route('employees') }}";
