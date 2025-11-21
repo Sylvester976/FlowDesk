@@ -1,4 +1,7 @@
 <?php
+use App\Models\County;
+use App\Models\Country;
+use App\Models\Subcounty;
 
 if (!function_exists('generateRandomStrongPassword')) {
 
@@ -34,4 +37,22 @@ if (!function_exists('generateRandomStrongPassword')) {
         // Shuffle to mix mandatory characters
         return str_shuffle($password);
     }
+
+    function getCountryName($country)
+    {
+        $countryName = Country::where('id', $country)->first('name');
+        return $countryName ? $countryName->name : null;
+    }
+
+    function getCountyName($county)
+    {
+        $countyName = County::where('id', $county)->first('name');
+        return $countyName ? $countyName->name : null;
+    }
+
+    function getSubcountyName($subcounty){
+        $subcountyName = Subcounty::where('id', $subcounty)->first('name');
+        return $subcountyName ? $subcountyName->name : null;
+    }
+
 }
