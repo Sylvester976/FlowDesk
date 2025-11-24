@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 @extends('layouts.base')
 
 @section('main-content')
@@ -21,11 +22,11 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <p class="text-muted mb-1">Total Employees</p>
-                                <h3 class="mb-0">248</h3>
-                                <small class="text-success"><i class="bi bi-arrow-up"></i> 12% from last month</small>
+                                <h3 class="mb-0">{{ $employee_no }}</h3>
+                                <small class="text-success"><i class="fas fa-arrow-up"></i> 12% from last month</small>
                             </div>
                             <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-                                <i class="bi bi-people"></i>
+                                <i class="fas fa-users"></i>
                             </div>
                         </div>
                     </div>
@@ -38,11 +39,11 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <p class="text-muted mb-1">Currently Traveling</p>
-                                <h3 class="mb-0">42</h3>
+                                <h3 class="mb-0">{{ $currently_travelling }}</h3>
                                 <small class="text-info"><i class="bi bi-arrow-right"></i> 17% of total</small>
                             </div>
                             <div class="stat-icon bg-info bg-opacity-10 text-info">
-                                <i class="bi bi-airplane"></i>
+                                <i class="fas fa-plane"></i>
                             </div>
                         </div>
                     </div>
@@ -55,11 +56,11 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <p class="text-muted mb-1">Active Assignments</p>
-                                <h3 class="mb-0">68</h3>
-                                <small class="text-warning"><i class="bi bi-clock"></i> 15 ending soon</small>
+                                <h3 class="mb-0">{{ $active_assignments }}</h3>
+                                <small class="text-warning"><i class="fas fa-clock"></i> 15 ending soon</small>
                             </div>
                             <div class="stat-icon bg-warning bg-opacity-10 text-warning">
-                                <i class="bi bi-briefcase"></i>
+                                <i class="fas fa-briefcase"></i>
                             </div>
                         </div>
                     </div>
@@ -72,11 +73,12 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <p class="text-muted mb-1">Countries Covered</p>
-                                <h3 class="mb-0">23</h3>
-                                <small class="text-success"><i class="bi bi-globe"></i> Across 5 continents</small>
+                                <h3 class="mb-0">{{$countries_covered}}</h3>
+                                <small class="text-success"><i class="fas fa-globe-africa"></i> Across 5
+                                    continents</small>
                             </div>
                             <div class="stat-icon bg-success bg-opacity-10 text-success">
-                                <i class="bi bi-pin-map"></i>
+                                <i class="fas fa-map-marked"></i>
                             </div>
                         </div>
                     </div>
@@ -101,105 +103,37 @@
                                     <th>Assignment</th>
                                     <th>Start Date</th>
                                     <th>Status</th>
-                                    <th>Actions</th>
                                 </tr>
                                 </thead>
+
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="https://ui-avatars.com/api/?name=John+Doe"
-                                                 class="rounded-circle me-2" width="32" height="32" alt="Employee">
-                                            <span>John Doe</span>
-                                        </div>
-                                    </td>
-                                    <td><i class="bi bi-flag me-1"></i> United Kingdom</td>
-                                    <td>Project Consultation</td>
-                                    <td>Oct 15, 2025</td>
-                                    <td><span class="badge badge-status bg-success">Active</span></td>
-                                    <td class="table-actions">
-                                        <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="https://ui-avatars.com/api/?name=Sarah+Smith"
-                                                 class="rounded-circle me-2" width="32" height="32" alt="Employee">
-                                            <span>Sarah Smith</span>
-                                        </div>
-                                    </td>
-                                    <td><i class="bi bi-flag me-1"></i> Germany</td>
-                                    <td>Training Workshop</td>
-                                    <td>Oct 10, 2025</td>
-                                    <td><span class="badge badge-status bg-success">Active</span></td>
-                                    <td class="table-actions">
-                                        <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="https://ui-avatars.com/api/?name=Michael+Brown"
-                                                 class="rounded-circle me-2" width="32" height="32" alt="Employee">
-                                            <span>Michael Brown</span>
-                                        </div>
-                                    </td>
-                                    <td><i class="bi bi-flag me-1"></i> Singapore</td>
-                                    <td>Client Meeting</td>
-                                    <td>Oct 20, 2025</td>
-                                    <td><span class="badge badge-status bg-warning text-dark">Pending</span></td>
-                                    <td class="table-actions">
-                                        <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="https://ui-avatars.com/api/?name=Emily+Davis"
-                                                 class="rounded-circle me-2" width="32" height="32" alt="Employee">
-                                            <span>Emily Davis</span>
-                                        </div>
-                                    </td>
-                                    <td><i class="bi bi-flag me-1"></i> Canada</td>
-                                    <td>Research Collaboration</td>
-                                    <td>Oct 5, 2025</td>
-                                    <td><span class="badge badge-status bg-success">Active</span></td>
-                                    <td class="table-actions">
-                                        <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="https://ui-avatars.com/api/?name=David+Wilson"
-                                                 class="rounded-circle me-2" width="32" height="32" alt="Employee">
-                                            <span>David Wilson</span>
-                                        </div>
-                                    </td>
-                                    <td><i class="bi bi-flag me-1"></i> Australia</td>
-                                    <td>Conference Attendance</td>
-                                    <td>Sep 28, 2025</td>
-                                    <td><span class="badge badge-status bg-secondary">Completed</span></td>
-                                    <td class="table-actions">
-                                        <button class="btn btn-sm btn-outline-primary me-1"><i class="bi bi-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                @foreach($recent_assignments as $recent_assignment)
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://ui-avatars.com/api/?name=John+Doe"
+                                                     class="rounded-circle me-2" width="32" height="32" alt="Employee">
+                                                <span>{{ getUsernames($recent_assignment->user_id) }}</span>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            {{ getCountryName($recent_assignment->country_of_visit) }}
+                                        </td>
+
+                                        <td>{{ $recent_assignment->assignment_name }}</td>
+
+                                        <td>
+                                            {{ Carbon::parse($recent_assignment->start_date)->format('M d, Y') }}
+                                        </td>
+
+                                        <td>
+                                            <span class="badge bg-success">
+                                                {{ $recent_assignment->status }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -208,91 +142,40 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0">Recent Reports</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group list-group-flush">
-                            <a href="#" class="list-group-item list-group-item-action border-0 px-0">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 text-primary rounded p-2 me-3">
-                                        <i class="bi bi-file-pdf"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0">Monthly Travel Report</h6>
-                                        <small class="text-muted">Uploaded 2 hours ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action border-0 px-0">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-success bg-opacity-10 text-success rounded p-2 me-3">
-                                        <i class="bi bi-file-excel"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0">Expense Summary Q3</h6>
-                                        <small class="text-muted">Uploaded 5 hours ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action border-0 px-0">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-info bg-opacity-10 text-info rounded p-2 me-3">
-                                        <i class="bi bi-file-word"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-0">Assignment Review</h6>
-                                        <small class="text-muted">Uploaded 1 day ago</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="card shadow-sm">
                     <div class="card-header bg-white py-3">
                         <h5 class="mb-0">Top Destinations</h5>
                     </div>
                     <div class="card-body">
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span>United States</span>
-                                <span class="text-muted">28 trips</span>
+
+                        @php
+                            $colors = ['bg-primary', 'bg-info', 'bg-success', 'bg-warning', 'bg-danger'];
+                        @endphp
+
+                        @foreach($top_countries as $index => $item)
+                            @php
+                                $percentage = ($item['total'] / $maxTrips) * 100;
+                                $colorClass = $colors[$index % count($colors)];
+                            @endphp
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>{{ $item['country_name'] }}</span>
+                                    <span class="text-muted">{{ $item['total'] }} trips</span>
+                                </div>
+
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar {{ $colorClass }}"
+                                         role="progressbar"
+                                         style="width: {{ $percentage }}%">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-primary" role="progressbar" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span>United Kingdom</span>
-                                <span class="text-muted">22 trips</span>
-                            </div>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: 70%"></div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span>Germany</span>
-                                <span class="text-muted">18 trips</span>
-                            </div>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 55%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="d-flex justify-content-between mb-1">
-                                <span>Singapore</span>
-                                <span class="text-muted">15 trips</span>
-                            </div>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 45%"></div>
-                            </div>
-                        </div>
+                        @endforeach
+
                     </div>
+
+
                 </div>
             </div>
         </div>

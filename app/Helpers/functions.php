@@ -2,6 +2,7 @@
 use App\Models\County;
 use App\Models\Country;
 use App\Models\Subcounty;
+use App\Models\User;
 
 if (!function_exists('generateRandomStrongPassword')) {
 
@@ -53,6 +54,11 @@ if (!function_exists('generateRandomStrongPassword')) {
     function getSubcountyName($subcounty){
         $subcountyName = Subcounty::where('id', $subcounty)->first('name');
         return $subcountyName ? $subcountyName->name : null;
+    }
+
+    function getUsernames($userid){
+        $names = User::where('id', $userid)->first('name');
+        return $names ? $names->name : null;
     }
 
 }
