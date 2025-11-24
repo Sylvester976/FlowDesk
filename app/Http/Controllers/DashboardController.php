@@ -376,14 +376,28 @@ class DashboardController extends Controller
 
     public function viewAssignmentHistory($id)
     {
-        $my_assignments = Assignment::where('user_id', $id)->get();
-        $user = User::select('id', 'name', 'surname', 'other_names', 'pfNumber', 'designation', 'email')
+        $today = Carbon::today();
+        $my_assignments = Assignment::where('user_id', $id)->orderBy('id', 'desc')->get();
+        $user = User::select('id', 'name', 'surname', 'other_names', 'pfNumber', 'designation', 'email', 'status')
             ->where('id', $id)
+            ->first();
+        $current_assignments = Assignment::select(
+            'assignment_name',
+            'country_of_visit',
+            'county',
+            'subcounty',
+            'city',
+            'start_date',
+            'end_date'
+        )
+            ->where('user_id', $id)
+            ->where('end_date', '>', $today)
             ->first();
 
         $data = array(
             'my_assignments' => $my_assignments,
             'user' => $user,
+            'current_assignments' => $current_assignments,
         );
 
         return view('assignments.individualHistory', $data);

@@ -3,6 +3,7 @@ use App\Models\County;
 use App\Models\Country;
 use App\Models\Subcounty;
 use App\Models\User;
+use Carbon\Carbon;
 
 if (!function_exists('generateRandomStrongPassword')) {
 
@@ -38,27 +39,53 @@ if (!function_exists('generateRandomStrongPassword')) {
         // Shuffle to mix mandatory characters
         return str_shuffle($password);
     }
-
-    function getCountryName($country)
-    {
-        $countryName = Country::where('id', $country)->first('name');
-        return $countryName ? $countryName->name : null;
-    }
-
-    function getCountyName($county)
-    {
-        $countyName = County::where('id', $county)->first('name');
-        return $countyName ? $countyName->name : null;
-    }
-
-    function getSubcountyName($subcounty){
-        $subcountyName = Subcounty::where('id', $subcounty)->first('name');
-        return $subcountyName ? $subcountyName->name : null;
-    }
-
-    function getUsernames($userid){
-        $names = User::where('id', $userid)->first('name');
-        return $names ? $names->name : null;
-    }
-
 }
+
+function getCountryName($country)
+{
+    $countryName = Country::where('id', $country)->first('name');
+    return $countryName ? $countryName->name : null;
+}
+
+function getCountyName($county)
+{
+    $countyName = County::where('id', $county)->first('name');
+    return $countyName ? $countyName->name : null;
+}
+
+function getSubcountyName($subcounty){
+    $subcountyName = Subcounty::where('id', $subcounty)->first('name');
+    return $subcountyName ? $subcountyName->name : null;
+}
+
+function getUsernames($userid){
+    $names = User::where('id', $userid)->first('name');
+    return $names ? $names->name : null;
+}
+
+if (!function_exists('durationBetween')) {
+    /**
+     * Calculate duration between two dates.
+     * Returns months (rounded) if ≥ 1 month, otherwise days.
+     *
+     * @param string $startDate
+     * @param string $endDate
+     * @return string
+     */
+    function durationBetween($startDate, $endDate)
+    {
+        $start = Carbon::parse($startDate);
+        $end = Carbon::parse($endDate);
+
+        $monthsExact = $start->floatDiffInMonths($end); // exact decimal months
+        $months = round($monthsExact); // nearest whole month
+        $days = $start->diffInDays($end);
+
+        if ($months >= 1) {
+            return $months . ' month' . ($months > 1 ? 's' : '');
+        }
+
+        return $days . ' day' . ($days > 1 ? 's' : '');
+    }
+}
+
