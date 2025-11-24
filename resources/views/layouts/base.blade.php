@@ -110,7 +110,7 @@
                     </a>
                     <ul class="nav flex-column collapse submenu" id="assignmentsMenu">
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="active-assignments">
+                            <a class="nav-link" href="{{route('activeAssignment')}}" data-section="active-assignments">
                                 <svg fill="currentColor" viewBox="0 0 24 24">
                                     <path
                                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -119,7 +119,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="assignment-history">
+                            <a class="nav-link" href="{{ route('assignmentHistory') }}" data-section="assignment-history">
                                 <svg fill="currentColor" viewBox="0 0 24 24">
                                     <path
                                         d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>

@@ -21,10 +21,70 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        if ($redirect = checkLegitUser()) {
+        if ($redirect = checkLegitUser())
+        {
             return $redirect; // redirect if not allowed
         }
-        return view('dashboard.dashboard');
+
+        // lets define here data going to dashboard
+        $employee_no = User::all() -> count('user_id');
+        $pending = 'pending';
+        $kenya = 87;
+        $currently_travelling = Assignment::where('status', $pending)
+            ->distinct('user_id')
+            ->count('user_id');
+
+        $today = Carbon::today();
+
+        $active_assignments = Assignment::where('status', $pending)
+            ->orWhere('end_date', '>=', $today) // or use your date column
+            ->count('user_id');
+
+        $countries_covered = Assignment::where('country_of_visit', '!=', $kenya)
+            ->count('user_id');
+
+        $recent_assignments = Assignment::select(
+            'user_id',
+            'country_of_visit',
+            'assignment_name',
+            'start_date',
+            'status'
+        )
+            ->orderBy('start_date', 'desc')
+            ->orderBy('id', 'desc')
+            ->where('country_of_visit', '!=', $kenya)
+            ->take(5)
+            ->get();
+
+        $top_countries = Assignment::select('country_of_visit')
+            ->selectRaw('COUNT(id) as total')
+            ->where('country_of_visit', '!=', 87)
+            ->groupBy('country_of_visit')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'country_name' => getCountryName($row->country_of_visit),
+                    'total' => $row->total,
+                ];
+            });
+
+        $maxTrips = $top_countries->max('total');
+
+        $data = [
+            'employee_no' => $employee_no,
+            'currently_travelling' => $currently_travelling,
+            'active_assignments' => $active_assignments,
+            'countries_covered' => $countries_covered,
+            'recent_assignments' => $recent_assignments,
+            'top_countries' => $top_countries,
+            'maxTrips' => $maxTrips,   // ⬅️ Add this
+        ];
+
+        return view('dashboard.dashboard', $data);
+
+
     }
 
     public function getSubcounties($countyId)
@@ -38,17 +98,17 @@ class DashboardController extends Controller
         $user_id = auth()->id();
 
         // Number of assignments
-        $mytrips = Assignment::where('user_id', $user_id)->count();
+        $mytrips = Assignment::where('user_id', $user_id)->count('user_id');
 
         // Number of pending assignments
         $active_assignments = Assignment::where('user_id', $user_id)
             ->where('status', 'pending')
-            ->count();
+            ->count('user_id');
 
         // Number of countries visited (not Kenya = id 87)
         $countries_visited = Assignment::where('user_id', $user_id)
             ->where('country_of_visit', '!=', 87)
-            ->count();
+            ->count('user_id');
 
         $kenya_places = ($mytrips - $countries_visited);
 
@@ -270,6 +330,78 @@ class DashboardController extends Controller
             'attachments' => AssignmentAttachment::where('assignment_id', $id)->get()
         );
         return view('assignments.viewMore', $data);
+    }
+
+    public function activeAssignment()
+    {
+        $today = Carbon::today();
+        $active_assignments = Assignment::where('status', 'pending')
+            ->distinct('assignment_name')
+            ->orWhere('end_date', '>=', $today)
+            ->get();
+        $data = array(
+            'active_assignments' => $active_assignments,
+        );
+        return view('assignments.activeAssignment', $data);
+
+    }
+
+    public function assignmentHistory()
+    {
+        $today = Carbon::today();
+
+        $all_users = User::select('id', 'name', 'pfNumber', 'surname', 'other_names')
+            ->with(['assignments' => function($query) use ($today) {
+                $query->where('end_date', '>', $today)
+                    ->orderBy('end_date', 'asc')  // earliest ending first
+                    ->limit(1);                   // only current assignment
+            }])
+            ->get()
+            ->map(function($user) {
+                return [
+                    'id' => $user->id,
+                    'name' => $user->name.' '.$user->surname.' '.$user->other_names,
+                    'pfNumber' => $user->pfNumber,
+                    'current_assignment' => $user->assignments->first()->assignment_name ?? 'No Active Assignment',
+                    'end_date' => $user->assignments->first() ? Carbon::parse($user->assignments->first()->end_date)->format('d M Y') : 'N/A',
+                ];
+            });
+
+        $data = array(
+            'all_users' => $all_users,
+        );
+
+        return view('assignments.history', $data);
+    }
+
+    public function viewAssignmentHistory($id)
+    {
+        $today = Carbon::today();
+        $my_assignments = Assignment::where('user_id', $id)->orderBy('id', 'desc')->get();
+        $user = User::select('id', 'name', 'surname', 'other_names', 'pfNumber', 'designation', 'email', 'status')
+            ->where('id', $id)
+            ->first();
+        $current_assignments = Assignment::select(
+            'assignment_name',
+            'country_of_visit',
+            'county',
+            'subcounty',
+            'city',
+            'start_date',
+            'end_date'
+        )
+            ->where('user_id', $id)
+            ->where('end_date', '>', $today)
+            ->first();
+
+        $data = array(
+            'my_assignments' => $my_assignments,
+            'user' => $user,
+            'current_assignments' => $current_assignments,
+        );
+
+        return view('assignments.individualHistory', $data);
+
     }
 
 

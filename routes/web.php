@@ -45,6 +45,14 @@ Route::post('/save_assignment', [DashboardController::class, 'save_assignment'])
 Route::get('/assignHistory', [DashboardController::class, 'assign_history'])
     ->middleware(['auth', 'verified'])
     ->name('assignHistory');
+Route::get('/activeAssignment', [DashboardController::class, 'activeAssignment'])
+    ->middleware(['auth', 'verified'])
+    ->name('activeAssignment');
+Route::get('/assignmentHistory', [DashboardController::class, 'assignmentHistory'])
+    ->middleware(['auth', 'verified'])
+    ->name('assignmentHistory');
+Route::get('/viewAssignmentHistory/{id}', [DashboardController::class, 'viewAssignmentHistory'])
+    ->name('view.assignment');
 
 
 
