@@ -58,10 +58,16 @@ function getSubcountyName($subcounty){
     return $subcountyName ? $subcountyName->name : null;
 }
 
-function getUsernames($userid){
-    $names = User::where('id', $userid)->first('name');
-    return $names ? $names->name : null;
+function getUsernames($userid) {
+    $names = User::where('id', $userid)->first(['name', 'surname', 'other_names']);
+
+    if (!$names) {
+        return null;
+    }
+
+    return trim($names->name.' '.$names->surname.' '.$names->other_names);
 }
+
 
 if (!function_exists('durationBetween')) {
     /**

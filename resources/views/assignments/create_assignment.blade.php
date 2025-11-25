@@ -1,4 +1,4 @@
-@extends('layouts.base_staff')
+@extends('layouts.base')
 @section('main-content')
     <div class="page-header d-print-none">
         <div class="container-xl">
@@ -17,7 +17,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Assignment Form</h3>
                 </div>
-                <form id="assignmentForm" method="post" enctype="multipart/form-data">
+                <form id="assignmentForm2" method="post" enctype="multipart/form-data">
                     <div class="card-body">
                         <div class="row g-3 mb-4">
                             <div class="col-md-12">
@@ -115,13 +115,13 @@
     </div>
     <script src="{{ asset ('js/jquery-3.7.1.min.js') }}"></script>
     <script>
-        document.getElementById('assignmentForm').addEventListener('submit', function (e) {
+        document.getElementById('assignmentForm2').addEventListener('submit', function (e) {
             e.preventDefault();
 
             const formData = new FormData(this);
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            fetch("{{ route('save_assignment') }}", {
+            fetch("{{ route('save_assignment_admin') }}", {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -133,10 +133,10 @@
                 .then(data => {
                     if (data.status === 'success') {
                         notyf.success(data.message);
-                        document.getElementById('assignmentForm').reset();
+                        document.getElementById('assignmentForm2').reset();
 
                         setTimeout(() => {
-                            window.location.href = "{{ route('assignHistory') }}";
+                            window.location.href = "{{ route('activeAssignment') }}";
                         }, 1500);
 
                     } else {

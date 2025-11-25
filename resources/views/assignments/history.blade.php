@@ -2,7 +2,7 @@
 @section('main-content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="mb-1">Active Assignment</h2>
+            <h2 class="mb-1">Assignments for each individual</h2>
         </div>
     </div>
     <div class="row g-4">
@@ -11,7 +11,7 @@
             <div class="card border-0 shadow-sm rounded-3">
                 <div class="card-header bg-white py-3 border-bottom-0 d-flex align-items-center">
                     <h5 class="mb-0 fw-semibold text-primary">
-                        <i class="fas fa-users me-2 text-secondary"></i>List of Active Assignment
+                        <i class="fas fa-users me-2 text-secondary"></i>List of Active staff with history of their Assignments
                     </h5>
                 </div>
 

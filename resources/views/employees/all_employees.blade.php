@@ -13,7 +13,7 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover mb-0">
+                        <table id="stafftable" class="table table-hover align-middle mb-0">
                             <thead class="table-light">
                             <tr>
                                 <th>#</th>
@@ -53,6 +53,45 @@
             </div>
         </div>
     </div>
+    <!-- Optional: Enable tooltips -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const table = $('#stafftable').DataTable({
+                dom: '<"d-flex justify-content-between align-items-center mb-2"Bf>rtip',
+                buttons: [
+                    {extend: 'copy', text: '<i class="fas fa-copy"></i> Copy'},
+                    {extend: 'csv', text: '<i class="fas fa-file-csv"></i> CSV'},
+                    {extend: 'excel', text: '<i class="fas fa-file-excel"></i> Excel'},
+                    {extend: 'pdf', text: '<i class="fas fa-file-pdf"></i> PDF'},
+                    {extend: 'print', text: '<i class="fas fa-print"></i> Print'}
+                ],
+            });
+
+            // 🔽 Enable per-column filters
+            $('#stafftable tfoot th').each(function () {
+                const input = $(this).find('input');
+                if (input.length) {
+                    $(input).on('keyup change', function () {
+                        if (table.column($(this).parent().index()).search() !== this.value) {
+                            table.column($(this).parent().index()).search(this.value).draw();
+                        }
+                    });
+                }
+            });
+
+        });
+
+
+    </script>
 @endsection
 
 

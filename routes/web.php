@@ -53,6 +53,12 @@ Route::get('/assignmentHistory', [DashboardController::class, 'assignmentHistory
     ->name('assignmentHistory');
 Route::get('/viewAssignmentHistory/{id}', [DashboardController::class, 'viewAssignmentHistory'])
     ->name('view.assignment');
+Route::get('/create_assignment', [DashboardController::class, 'create_assignment'])
+    ->middleware(['auth', 'verified'])
+    ->name('create_assignment');
+Route::post('/save_assignment_admin', [DashboardController::class, 'save_assignment_admin'])
+    ->middleware(['auth', 'verified'])
+    ->name('save_assignment_admin');
 
 
 
