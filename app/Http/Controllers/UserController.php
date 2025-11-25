@@ -12,7 +12,7 @@ class UserController extends Controller
         if ($redirect = checkLegitUser()) {
             return $redirect; // redirect if not allowed
         }
-        $allUsers = User::all();
+        $allUsers = User::orderBy('id', 'desc')->get();
         return view('employees.all_employees',compact('allUsers'));
     }
 

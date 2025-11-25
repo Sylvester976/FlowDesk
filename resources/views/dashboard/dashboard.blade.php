@@ -109,11 +109,18 @@
                                 <tbody>
                                 @foreach($recent_assignments as $recent_assignment)
                                     <tr>
+                                        @php
+                                            $fullname = getUsernames($recent_assignment->user_id);
+                                            $avatar = 'https://ui-avatars.com/api/?name=' . urlencode($fullname) . '&background=0D8ABC&color=fff';
+                                        @endphp
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <img src="https://ui-avatars.com/api/?name=John+Doe"
-                                                     class="rounded-circle me-2" width="32" height="32" alt="Employee">
-                                                <span>{{ getUsernames($recent_assignment->user_id) }}</span>
+                                                <img src="{{ $avatar }}"
+                                                     class="rounded-circle me-2"
+                                                     width="32"
+                                                     height="32"
+                                                     alt="{{ $fullname }}">
+                                                <span>{{ $fullname }}</span>
                                             </div>
                                         </td>
 

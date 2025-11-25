@@ -9,7 +9,7 @@
         <div class="col-lg-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3">
-                    <h5 class="mb-0">List of registered employees</h5>
+                    <h5 class="mb-0">List of all your assignments</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -82,7 +82,6 @@
                     {extend: 'pdf', text: '<i class="fas fa-file-pdf"></i> PDF'},
                     {extend: 'print', text: '<i class="fas fa-print"></i> Print'}
                 ],
-                order: [[15, 'desc']]
             });
 
             // 🔽 Enable per-column filters
