@@ -175,15 +175,59 @@ class DashboardController extends Controller
         ]);
 
         try {
-            // Send Markdown email with automatic vendor layout
+            $staffMessage = '';
+
+            // Greeting
+            $staffMessage .= '<p>Dear ' . $user->name . ' '. $user->surname. ' '. $user->other_names. ',</p>';
+
+            // Intro
+            $staffMessage .= '<p>Your account has been successfully created. Below are your login details:</p>';
+
+            // Details table
+            $staffMessage .= '<table cellpadding="8" cellspacing="0" border="1" style="border-collapse: collapse; width: 100%; max-width: 600px;">';
+            $staffMessage .= '<tr style="background-color: #e9f2ff;"><th align="left">Field</th><th align="left">Details</th></tr>';
+            $staffMessage .= '<tr><td><strong>Email</strong></td><td>' . $user->email . '</td></tr>';
+            $staffMessage .= '<tr><td><strong>Password</strong></td><td>' . $password . '</td></tr>';
+            $staffMessage .= '</table>';
+
+            // Security note
+            $staffMessage .= '<p style="color: red;"><strong>Important:</strong> Please change your password after first login.</p>';
+
+            // ✅ LOGIN BUTTON
+            $loginUrl = url('/login'); // change if your route is different
+
+            $staffMessage .= '
+        <p style="text-align: center; margin: 30px 0;">
+            <a href="' . $loginUrl . '"
+               style="
+                   background-color: #2563eb;
+                   color: #ffffff;
+                   padding: 12px 24px;
+                   text-decoration: none;
+                   border-radius: 6px;
+                   font-weight: bold;
+                   display: inline-block;
+               ">
+                Login Now
+            </a>
+        </p>
+    ';
+
+            // Closing
+            $staffMessage .= '<p>Best regards,<br>Management</p>';
+
+            // Send email
             Mail::to($user->email)
-                ->send(new StaffRegistered($user->name, $user->email, $password));
+                ->send(new CustomEmail('Your Account Has Been Created', $staffMessage));
+
         } catch (Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Staff saved, but failed to send email: ' . $e->getMessage()
             ]);
         }
+
+
 
         return response()->json([
             'status' => 'success',
@@ -291,7 +335,6 @@ class DashboardController extends Controller
             // Polite closing
             $assignmentMessage .= '<p>I appreciate your guidance and support regarding this assignment. Please let me know if there are any specific instructions or clarifications needed.</p>';
             $assignmentMessage .= '<p>Thank you.</p>';
-            $assignmentMessage .= '<p>Best regards,<br>Your Name</p>';
 
 
             // Send email
@@ -505,7 +548,7 @@ class DashboardController extends Controller
             // Polite closing
             $assignmentMessage .= '<p>I appreciate your guidance and support regarding this assignment. Please let me know if there are any specific instructions or clarifications needed.</p>';
             $assignmentMessage .= '<p>Thank you.</p>';
-            $assignmentMessage .= '<p>Best regards,<br>Your Name</p>';
+//            $assignmentMessage .= '<p>Best regards,<br>Your Name</p>';
 
 
             // Send email
