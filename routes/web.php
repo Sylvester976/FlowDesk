@@ -23,6 +23,14 @@ Route::get('/dashboard-staff', [DashboardController::class, 'dashboardStaff'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard-staff');
 
+Route::get('/dashboard-ict', [DashboardController::class, 'dashboardIct'])
+    ->middleware(['auth', 'verified'])
+    ->name('ddashboard-ict');
+
+Route::get('/dashboard-hr', [DashboardController::class, 'dashboardHr'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard-hr');
+
 Route::get('/employees', [UserController::class, 'showAllEmployees'])
     ->middleware(['auth', 'verified'])
     ->name('employees');

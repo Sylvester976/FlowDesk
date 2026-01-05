@@ -35,17 +35,29 @@ class AuthenticatedSessionController extends Controller
             $user = auth()->user();  // <-- IMPORTANT FIX
 
             // Role check
-            if ($user->role != 2) {
+            if ($user->role == 1) {
                 return response()->json([
                     'status'  => 'success',
                     'message' => 'Login successful! Redirecting...',
                     'redirect_url' => route('dashboard'),
                 ]);
-            } else {
+            } elseif($user->role == 2) {
                 return response()->json([
                     'status'  => 'success',
                     'message' => 'Login successful! Redirecting...',
                     'redirect_url' => route('dashboard-staff'),
+                ]);
+            } elseif($user->role == 3){
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => 'Login successful! Redirecting...',
+                    'redirect_url' => route('dashboard-ict'),
+                ]);
+            } elseif ($user->role == 4){
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => 'Login successful! Redirecting...',
+                    'redirect_url' => route('dashboard-hr'),
                 ]);
             }
 
