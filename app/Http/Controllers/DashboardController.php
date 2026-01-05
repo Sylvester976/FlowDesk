@@ -570,5 +570,15 @@ class DashboardController extends Controller
 
     }
 
+    public function dashboardIct()
+    {
+        return view('dashboard.dashboard_ict');
+    }
+
+    public function dashboardHr()
+    {
+        return view('dashboard.dashboard_hr');
+    }
+
 
 }
