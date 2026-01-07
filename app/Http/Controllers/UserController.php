@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function showAllEmployees(){
         // Check the user role
-        if ($redirect = checkLegitUser()) {
+        if ($redirect = checkLegitUserHr()) {
             return $redirect; // redirect if not allowed
         }
         $allUsers = User::orderBy('id', 'desc')->get();
@@ -17,6 +17,10 @@ class UserController extends Controller
     }
 
     public function addEmployee(){
+        // Check the user role
+        if ($redirect = checkLegitUserHr()) {
+            return $redirect; // redirect if not allowed
+        }
         $roles = Role::orderBy('name', 'asc')->get();
         return view('employees.add_employee',compact('roles'));
     }

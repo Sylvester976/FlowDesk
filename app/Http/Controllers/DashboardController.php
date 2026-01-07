@@ -578,7 +578,22 @@ class DashboardController extends Controller
 
     public function dashboardHr()
     {
-        return view('dashboard.dashboard_hr');
+        // lets define here data going to dashboard
+        $employee_no = User::all() -> count('id');
+        $recent_staff = $recent_staff = User::select(
+            'id',
+            'date_of_appointment',
+            'pfNumber'
+        )
+            ->orderBy('id', 'desc')
+            ->take(5)
+            ->get();
+
+        $data = [
+            'employee_no' => $employee_no,
+            'recent_staffs' => $recent_staff,
+        ];
+        return view('dashboard.dashboard_hr',$data);
     }
 
 

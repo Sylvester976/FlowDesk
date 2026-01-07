@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.base_hr')
 @section('main-content')
     <div class="page-header d-print-none">
         <div class="container-xl">
