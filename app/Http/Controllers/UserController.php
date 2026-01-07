@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 
 class UserController extends Controller
@@ -16,6 +17,7 @@ class UserController extends Controller
     }
 
     public function addEmployee(){
-        return view('employees.add_employee');
+        $roles = Role::orderBy('name', 'asc')->get();
+        return view('employees.add_employee',compact('roles'));
     }
 }

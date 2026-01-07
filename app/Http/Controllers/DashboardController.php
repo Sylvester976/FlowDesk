@@ -154,6 +154,7 @@ class DashboardController extends Controller
             'designation' => 'nullable|string|max:100',
             'date_of_birth' => 'nullable|date',
             'date_of_appointment' => 'nullable|date',
+            'role_id' => 'nullable|integer|exists:roles,id',
         ]);
 
         $password = generateRandomStrongPassword(12);
@@ -171,7 +172,7 @@ class DashboardController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'date_of_appointment' => $request->date_of_appointment,
             'password' => Hash::make($password),
-            'role' => 2,
+            'role' => $request->role_id,
         ]);
 
         try {
