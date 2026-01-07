@@ -27,7 +27,6 @@ class DashboardController extends Controller
         }
 
         // lets define here data going to dashboard
-        $employee_no = User::all() -> count('user_id');
         $pending = 'pending';
         $kenya = 87;
         $currently_travelling = Assignment::where('status', $pending)
@@ -73,7 +72,6 @@ class DashboardController extends Controller
         $maxTrips = $top_countries->max('total');
 
         $data = [
-            'employee_no' => $employee_no,
             'currently_travelling' => $currently_travelling,
             'active_assignments' => $active_assignments,
             'countries_covered' => $countries_covered,
@@ -154,6 +152,7 @@ class DashboardController extends Controller
             'designation' => 'nullable|string|max:100',
             'date_of_birth' => 'nullable|date',
             'date_of_appointment' => 'nullable|date',
+            'role_id' => 'nullable|integer|exists:roles,id',
         ]);
 
         $password = generateRandomStrongPassword(12);
@@ -171,7 +170,7 @@ class DashboardController extends Controller
             'date_of_birth' => $request->date_of_birth,
             'date_of_appointment' => $request->date_of_appointment,
             'password' => Hash::make($password),
-            'role' => 2,
+            'role' => $request->role_id,
         ]);
 
         try {
@@ -577,7 +576,22 @@ class DashboardController extends Controller
 
     public function dashboardHr()
     {
-        return view('dashboard.dashboard_hr');
+        // lets define here data going to dashboard
+        $employee_no = User::all() -> count('id');
+        $recent_staff = $recent_staff = User::select(
+            'id',
+            'date_of_appointment',
+            'pfNumber'
+        )
+            ->orderBy('id', 'desc')
+            ->take(5)
+            ->get();
+
+        $data = [
+            'employee_no' => $employee_no,
+            'recent_staffs' => $recent_staff,
+        ];
+        return view('dashboard.dashboard_hr',$data);
     }
 
 

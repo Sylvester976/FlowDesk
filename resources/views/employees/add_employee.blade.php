@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.base_hr')
 @section('main-content')
     <div class="page-header d-print-none">
         <div class="container-xl">
@@ -73,6 +73,15 @@
                             <div class="col-md-6">
                                 <label class="form-label required">Date of Appointment</label>
                                 <input type="date" class="form-control" name="date_of_appointment" required>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label required">Roles</label>
+                                    <select class="form-control" name="role_id" required>
+                                        <option value="">-- Select Role --</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                        @endforeach
+                                    </select>
                             </div>
                         </div>
                     </div>
