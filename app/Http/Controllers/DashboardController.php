@@ -27,7 +27,6 @@ class DashboardController extends Controller
         }
 
         // lets define here data going to dashboard
-        $employee_no = User::all() -> count('user_id');
         $pending = 'pending';
         $kenya = 87;
         $currently_travelling = Assignment::where('status', $pending)
@@ -73,7 +72,6 @@ class DashboardController extends Controller
         $maxTrips = $top_countries->max('total');
 
         $data = [
-            'employee_no' => $employee_no,
             'currently_travelling' => $currently_travelling,
             'active_assignments' => $active_assignments,
             'countries_covered' => $countries_covered,

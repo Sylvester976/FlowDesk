@@ -16,24 +16,7 @@
 
         <!-- Statistics Cards -->
         <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="card stat-card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-muted mb-1">Total Employees</p>
-                                <h3 class="mb-0">{{ $employee_no }}</h3>
-                                <small class="text-success"><i class="fas fa-arrow-up"></i> 12% from last month</small>
-                            </div>
-                            <div class="stat-icon bg-primary bg-opacity-10 text-primary">
-                                <i class="fas fa-users"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
+            <div class="col-md-6">
                 <div class="card stat-card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
