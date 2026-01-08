@@ -83,7 +83,7 @@
                                 <tr>
                                     <th>Employee</th>
                                     <th>Country</th>
-                                    <th>Assignment</th>
+                                    <th>Assignment Description</th>
                                     <th>Start Date</th>
                                     <th>Status</th>
                                 </tr>
@@ -111,7 +111,9 @@
                                             {{ getCountryName($recent_assignment->country_of_visit) }}
                                         </td>
 
-                                        <td>{{ $recent_assignment->assignment_name }}</td>
+                                        <td title="{{ $recent_assignment->assignment_name }}">
+                                            {{ Str::limit($recent_assignment->assignment_name, 50) }}
+                                        </td>
 
                                         <td>
                                             {{ Carbon::parse($recent_assignment->start_date)->format('M d, Y') }}
