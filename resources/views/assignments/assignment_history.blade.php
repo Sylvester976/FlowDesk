@@ -17,10 +17,10 @@
                             <thead class="table-light">
                             <tr>
                                 <th>#</th>
-                                <th>Assignment</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Country of Visit</th>
+                                <th>Description</th>
                                 <th>status</th>
                                 <th>Actions</th>
                             </tr>
@@ -29,10 +29,12 @@
                             @forelse($assignments as $assignment)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{$assignment->assignment_name}}</td>
                                     <td>{{ \Carbon\Carbon::parse($assignment->start_date)->format('d-m-Y') }}</td>
                                     <td>{{ \Carbon\Carbon::parse($assignment->end_date)->format('d-m-Y') }}</td>
                                     <td>{{ getCountryName($assignment->country_of_visit) }}</td>
+                                    <td title="{{ $assignment->assignment_name }}">
+                                        {{ Str::limit($assignment->assignment_name, 30) }}
+                                    </td>
                                     <td>
                                         @php
                                             $status = strtolower($assignment->status);

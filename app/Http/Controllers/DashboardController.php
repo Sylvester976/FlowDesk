@@ -316,7 +316,7 @@ class DashboardController extends Controller
             // Assignment details in a clean table
             $assignmentMessage .= '<table cellpadding="8" cellspacing="0" border="1" style="border-collapse: collapse; width: 100%; max-width: 600px;">';
             $assignmentMessage .= '<tr style="background-color: #e9f2ff;"><th align="left">Field</th><th align="left">Details</th></tr>';
-            $assignmentMessage .= '<tr><td><strong>Assignment Name</strong></td><td>' . $assignment->assignment_name . '</td></tr>';
+            $assignmentMessage .= '<tr><td><strong>Assignment Description</strong></td><td>' . $assignment->assignment_name . '</td></tr>';
 
             if ($assignment->country_of_visit == 87) {
                 $assignmentMessage .= '<tr><td><strong>County</strong></td><td>' . getCountyName($request->county) . '</td></tr>';
