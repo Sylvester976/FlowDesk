@@ -252,7 +252,8 @@ class DashboardController extends Controller
     {
 
         $request->validate([
-            'assignment_name' => 'required|string|max:255',
+            'assignment_name' => 'required|string',
+            'travel_type' => 'required|in:1,2',
             'country_of_visit' => 'required|integer|exists:countries,id',
             'county' => 'nullable|integer|exists:counties,id',
             'subcounty' => 'nullable|integer|exists:subcounties,id',
@@ -269,6 +270,7 @@ class DashboardController extends Controller
         $assignment = Assignment::create([
             'user_id' => auth()->id(),
             'assignment_name' => $request->assignment_name,
+            'travel_type' => $request->travel_type,
             'country_of_visit' => $request->country_of_visit,
             'county' => $request->county,
             'subcounty' => $request->subcounty,
