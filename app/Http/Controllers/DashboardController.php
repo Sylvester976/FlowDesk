@@ -252,7 +252,8 @@ class DashboardController extends Controller
     {
 
         $request->validate([
-            'assignment_name' => 'required|string|max:255',
+            'assignment_name' => 'required|string',
+            'travel_type' => 'required|in:1,2',
             'country_of_visit' => 'required|integer|exists:countries,id',
             'county' => 'nullable|integer|exists:counties,id',
             'subcounty' => 'nullable|integer|exists:subcounties,id',
@@ -269,6 +270,7 @@ class DashboardController extends Controller
         $assignment = Assignment::create([
             'user_id' => auth()->id(),
             'assignment_name' => $request->assignment_name,
+            'travel_type' => $request->travel_type,
             'country_of_visit' => $request->country_of_visit,
             'county' => $request->county,
             'subcounty' => $request->subcounty,
@@ -314,7 +316,7 @@ class DashboardController extends Controller
             // Assignment details in a clean table
             $assignmentMessage .= '<table cellpadding="8" cellspacing="0" border="1" style="border-collapse: collapse; width: 100%; max-width: 600px;">';
             $assignmentMessage .= '<tr style="background-color: #e9f2ff;"><th align="left">Field</th><th align="left">Details</th></tr>';
-            $assignmentMessage .= '<tr><td><strong>Assignment Name</strong></td><td>' . $assignment->assignment_name . '</td></tr>';
+            $assignmentMessage .= '<tr><td><strong>Assignment Description</strong></td><td>' . $assignment->assignment_name . '</td></tr>';
 
             if ($assignment->country_of_visit == 87) {
                 $assignmentMessage .= '<tr><td><strong>County</strong></td><td>' . getCountyName($request->county) . '</td></tr>';

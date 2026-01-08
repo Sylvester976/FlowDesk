@@ -13,7 +13,8 @@ class Assignment extends Model
 
     protected $fillable = [
         'user_id',
-        'assignment_name',
+        'assignment_name',   // now used as justification_of_travel
+        'travel_type',       // OFFICIAL | PERSONAL
         'name',
         'country_of_visit',
         'county',

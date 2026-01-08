@@ -23,10 +23,10 @@
                             <thead class="bg-light text-muted">
                             <tr>
                                 <th class="text-center">#</th>
-                                <th>Assignment</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Country</th>
+                                <th>Assignment Description</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                             </thead>
@@ -35,11 +35,6 @@
                             @forelse($active_assignments as $active_assignment)
                                 <tr>
                                     <td class="text-center fw-bold">{{ $loop->iteration }}</td>
-
-                                    <td class="fw-semibold text-dark">
-                                        {{ $active_assignment->assignment_name }}
-                                    </td>
-
                                     <td>
                                     <span class="badge bg-light text-dark px-3 py-2">
                                         {{ \Carbon\Carbon::parse($active_assignment->start_date)->format('M d, Y') }}
@@ -54,6 +49,10 @@
 
                                     <td>
                                         {{ getCountryName($active_assignment->country_of_visit) }}
+                                    </td>
+
+                                    <td class="fw-semibold text-dark" title="{{ $active_assignment->assignment_name }}">
+                                        {{ Str::limit($active_assignment->assignment_name, 50) }}
                                     </td>
 
                                     <td class="text-center">

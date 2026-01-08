@@ -17,15 +17,56 @@
                 <div class="card-header">
                     <h3 class="card-title">Assignment Form</h3>
                 </div>
-                <form id="assignmentForm2" method="post" enctype="multipart/form-data">
+                <form id="assignmentForm" method="post" enctype="multipart/form-data">
                     <div class="card-body">
                         <div class="row g-3 mb-4">
                             <div class="col-md-12">
-                                <label class="form-label required">Name of Assignment</label>
-                                <input type="text" class="form-control" name="assignment_name" placeholder="Enter the name of assignment"
-                                       required>
+                                <label class="form-label required">Reasons for Travelling</label>
+                                <select id="travel_reason" name="travel_type" class="form-control" required>
+                                    <option value="">Select your reason for travelling</option>
+                                    <option value="1">OFFICIAL</option>
+                                    <option value="2">PERSONAL</option>
+                                </select>
                             </div>
                         </div>
+
+                        <!-- LEAVE QUESTION (PERSONAL ONLY) -->
+                        <div class="row g-3 mb-4 d-none" id="leaveSection">
+                            <div class="col-md-12">
+                                <label class="form-label required">Have you applied for leave?</label>
+                                <select id="leaveApplied" class="form-control" >
+                                    <option value="">Select</option>
+                                    <option value="YES">YES</option>
+                                    <option value="NO">NO</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- WRITE UP -->
+                        <div class="row g-3 mb-4 d-none" id="writeUpSection">
+                            <div class="col-md-12">
+                                <label class="form-label required" id="writeUpLabel">Reason for Travelling</label>
+                                <textarea class="form-control" id="assignment_textarea" name="assignment_name"
+                                          rows="4" placeholder=""></textarea>
+                            </div>
+                        </div>
+
+                        <!-- ATTACHMENTS -->
+                        <div class="row g-3 mb-4 d-none" id="attachmentSection">
+                            <div class="col-md-12">
+                                <label class="form-label required" id="attachmentLabel">Attachments</label>
+                                <div id="dropArea" class="border border-dashed p-4 text-center" style="cursor:pointer;">
+                                    <p>Drag & drop files here, or click to select files</p>
+                                    <small class="form-text text-muted" id="attachmentHelp"></small>
+                                    <input type="file" id="attachments" name="attachments[]" multiple style="display:none;">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 mt-2">
+                                <ul id="attachmentList" class="list-group"></ul>
+                            </div>
+                        </div>
+
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
                                 <label class="form-label required">Country of Visit</label>
@@ -58,24 +99,6 @@
                                 <label class="form-label required">City/Town</label>
                                 <input type="text" class="form-control" name="city"
                                        placeholder="e.g., Nairobi, Kisumu" required>
-                            </div>
-                        </div>
-
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-12 mt-3">
-                                <label class="form-label required">Attachments</label>
-                                <div id="dropArea" class="border border-dashed p-4 text-center" style="cursor: pointer;">
-                                    <p>Drag & drop files here, or click to select files</p>
-                                    <small class="form-text text-muted">
-                                        Allowed formats: jpg, jpeg, png, pdf. Max size per file: 2 MB.
-                                        Attachments can be nomination letter, air ticket, passport, receipts, etc.
-                                    </small>
-                                    <input type="file" id="attachments" name="attachments[]" multiple style="display:none;" required>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12 mt-2">
-                                <ul id="attachmentList" class="list-group"></ul>
                             </div>
                         </div>
 
@@ -115,13 +138,27 @@
     </div>
     <script src="{{ asset ('js/jquery-3.7.1.min.js') }}"></script>
     <script>
-        document.getElementById('assignmentForm2').addEventListener('submit', function (e) {
+        document.getElementById('assignmentForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const formData = new FormData(this);
+            const form = this;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const formData = new FormData(form);
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-            fetch("{{ route('save_assignment_admin') }}", {
+            // 🔵 Disable submit button
+            submitBtn.disabled = true;
+
+            // 🔵 Show persistent processing message
+            const processingNotification = notyf.open({
+                type: 'info',
+                message: 'Submitting request, please wait...',
+                duration: 0, // stays until dismissed
+                ripple: false,
+                dismissible: false
+            });
+
+            fetch("{{ route('save_assignment') }}", {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': csrfToken,
@@ -131,23 +168,28 @@
             })
                 .then(response => response.json())
                 .then(data => {
+                    notyf.dismiss(processingNotification);
+
                     if (data.status === 'success') {
                         notyf.success(data.message);
-                        document.getElementById('assignmentForm2').reset();
+                        form.reset();
 
                         setTimeout(() => {
-                            window.location.href = "{{ route('activeAssignment') }}";
+                            window.location.href = "{{ route('assignHistory') }}";
                         }, 1500);
-
                     } else {
+                        submitBtn.disabled = false;
                         notyf.error(data.message);
                     }
                 })
                 .catch(() => {
+                    notyf.dismiss(processingNotification);
+                    submitBtn.disabled = false;
                     notyf.error('Something went wrong. Try again later.');
                 });
         });
     </script>
+
     <script>
         $(document).ready(function() {
             $('#country_of_visit').on('change', function() {
@@ -276,6 +318,79 @@
             input.files = dataTransfer.files;
         }
     </script>
+    <script>
+        document.getElementById('travel_reason').addEventListener('change', function () {
+            resetSections();
+
+            if (this.value === '1') {
+                showOfficial();
+            }
+
+            if (this.value === '2') {
+                document.getElementById('leaveSection').classList.remove('d-none');
+            }
+        });
+
+        document.getElementById('leaveApplied').addEventListener('change', function () {
+            if (this.value === 'NO') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Leave Required',
+                    text: 'Please apply for leave first and ensure it is approved before submitting this request.',
+                    confirmButtonText: 'Okay'
+                }).then(() => {
+                    location.reload();
+                });
+                return;
+            }
+
+            if (this.value === 'YES') {
+                showPersonal();
+            }
+        });
+
+        function showOfficial() {
+            document.getElementById('writeUpLabel').innerText = 'Reason for Travelling';
+            document.getElementById('assignment_textarea').placeholder =
+                'Provide a brief write-up and attach the memo or any official supporting documents.';
+
+            document.getElementById('attachmentLabel').innerText = 'Attach Official Documents';
+            document.getElementById('attachmentHelp').innerText =
+                'Attach memo, official approval, invitation letter or any supporting official documents.';
+
+            showWriteUpAndAttachments();
+        }
+
+        function showPersonal() {
+            document.getElementById('writeUpLabel').innerText = 'Personal Travel Justification';
+            document.getElementById('assignment_textarea').placeholder =
+                'Provide a brief write-up and attach approved leave or any relevant documents.';
+
+            document.getElementById('attachmentLabel').innerText = 'Attach Leave Documents';
+            document.getElementById('attachmentHelp').innerText =
+                'Attach approved leave form or any other relevant documents.';
+
+            showWriteUpAndAttachments();
+        }
+
+        function showWriteUpAndAttachments() {
+            document.getElementById('writeUpSection').classList.remove('d-none');
+            document.getElementById('attachmentSection').classList.remove('d-none');
+
+            document.getElementById('assignment_textarea').required = true;
+            document.getElementById('attachments').required = true;
+        }
+
+        function resetSections() {
+            document.getElementById('leaveSection').classList.add('d-none');
+            document.getElementById('writeUpSection').classList.add('d-none');
+            document.getElementById('attachmentSection').classList.add('d-none');
+
+            document.getElementById('assignment_textarea').required = false;
+            document.getElementById('attachments').required = false;
+        }
+    </script>
+
 
 
 
