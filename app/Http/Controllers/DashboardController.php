@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -595,6 +596,78 @@ class DashboardController extends Controller
         ];
         return view('dashboard.dashboard_hr',$data);
     }
+
+    public function getAirports($countryCode)
+    {
+        $apiKey = env('AVIATIONSTACK_KEY');
+
+        try {
+            // Fetch airports (limit adjustable depending on your plan)
+            $response = Http::get('http://api.aviationstack.com/v1/airports', [
+                'access_key' => $apiKey,
+                'limit' => 1000 // fetch up to 1000 airports
+            ]);
+
+            // Log the raw response for debugging
+            \Log::info("AviationStack API response for {$countryCode}:", [
+                'status' => $response->status(),
+                'body' => $response->body()
+            ]);
+
+            // If API request failed
+            if ($response->failed()) {
+                return response()->json([
+                    'error' => 'Failed to fetch airports',
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ], 500);
+            }
+
+            // Extract the airports array
+            $airports = $response->json('data');
+
+            if (!$airports || !is_array($airports)) {
+                return response()->json([
+                    'error' => 'Invalid API response',
+                    'raw_response' => $response->body()
+                ], 500);
+            }
+
+            // Filter airports by country ISO code
+            $filteredAirports = array_filter($airports, function ($airport) use ($countryCode) {
+                return isset($airport['country_iso2']) && strtoupper($airport['country_iso2']) === strtoupper($countryCode);
+            });
+
+            // Reindex array for JSON response
+            $filteredAirports = array_values($filteredAirports);
+
+            if (empty($filteredAirports)) {
+                return response()->json([
+                    'error' => "No airports found for country code: {$countryCode}"
+                ], 404);
+            }
+
+            // Return filtered airports
+            return response()->json($filteredAirports);
+
+        } catch (\Exception $e) {
+            // Log exception for debugging
+            \Log::error("Exception fetching airports for {$countryCode}:", [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'error' => 'Exception occurred while fetching airports',
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
+        }
+    }
+
+
+
+
 
 
 }

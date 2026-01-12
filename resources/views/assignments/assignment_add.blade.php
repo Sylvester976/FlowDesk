@@ -73,7 +73,7 @@
                                 <select id="country_of_visit" name="country_of_visit" class="form-control" required>
                                     <option value="">Select your country</option>
                                     @foreach($countries as $country)
-                                        <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                        <option value="{{ $country->id }}" data-iso2="{{ $country->iso2 }}">{{ $country->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -92,6 +92,13 @@
                                 <label class="form-label required">Subcounty</label>
                                 <select id="subcounty" name="subcounty" class="form-control">
                                     <option value="">Select subcounty</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label required">Airport</label>
+                                <select id="airport" name="airport" class="form-control" disabled>
+                                    <option value="">Select Airport</option>
                                 </select>
                             </div>
 
@@ -390,6 +397,65 @@
             document.getElementById('attachments').required = false;
         }
     </script>
+    <script>
+        document.getElementById('country_of_visit').addEventListener('change', function () {
+            let selected = this.options[this.selectedIndex];
+            let iso2 = selected.dataset.iso2;
+
+            let airportSelect = document.getElementById('airport');
+
+            // Reset Airport dropdown
+            airportSelect.innerHTML = '<option>Loading...</option>';
+            airportSelect.disabled = true;
+
+            if (!iso2) {
+                airportSelect.innerHTML = '<option value="">Select Airport</option>';
+                return;
+            }
+
+            // Fetch airports for selected country
+            fetch(`/airports/${iso2}`, {
+                headers: { 'Accept': 'application/json' }
+            })
+                .then(res => res.json())
+                .then(response => {
+                    console.log('API Response:', response);
+
+                    if (response.error) {
+                        airportSelect.innerHTML = `<option>Error: ${response.error}</option>`;
+                        return;
+                    }
+
+                    let airports = Array.isArray(response) ? response : response.data;
+
+                    if (!airports || airports.length === 0) {
+                        airportSelect.innerHTML = `<option>No airports found</option>`;
+                        return;
+                    }
+
+                    airportSelect.innerHTML = '<option value="">Select Airport</option>';
+
+                    airports.forEach(airport => {
+                        airportSelect.innerHTML += `
+                <option value="${airport.iata_code}">
+                    ${airport.airport_name} (${airport.city})
+                </option>
+            `;
+                    });
+
+                    airportSelect.disabled = false;
+                })
+                .catch(err => {
+                    airportSelect.innerHTML = `<option>Network or JS error</option>`;
+                    console.error('Fetch error:', err);
+                });
+        });
+    </script>
+
+
+
+
+
 
 
 

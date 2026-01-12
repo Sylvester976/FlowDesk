@@ -68,6 +68,10 @@ Route::post('/save_assignment_admin', [DashboardController::class, 'save_assignm
     ->middleware(['auth', 'verified'])
     ->name('save_assignment_admin');
 
+// Aviation stack API
+Route::get('/airports/{countryCode}', [DashboardController::class, 'getAirports']);
+
+
 
 
 
