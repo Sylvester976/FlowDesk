@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Mail\CustomEmail;
-use App\Mail\StaffRegistered;
 use App\Models\Assignment;
 use App\Models\AssignmentAttachment;
 use App\Models\Country;
