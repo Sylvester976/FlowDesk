@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo e(config('app.name', 'FlowDesk')); ?> &mdash; <?php echo $__env->yieldContent('title', 'Sign In'); ?></title>
 
-    <link href="<?php echo e(asset('assets/img/favicon.png')); ?>" rel="icon">
+    <link href="<?php echo e(asset('assets/img/cos.ico')); ?>" rel="icon">
     <link href="<?php echo e(asset('assets/img/apple-touch-icon.png')); ?>" rel="apple-touch-icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +15,18 @@
     <link href="<?php echo e(asset('assets/vendor/bootstrap/css/bootstrap.min.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('assets/css/main.css')); ?>" rel="stylesheet">
+    <style>
+        .notie-container {
+            width: 320px !important;
+            right: 20px !important;
+            left: auto !important;
+            top: 20px !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,.15) !important;
+            font-size: .88rem !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css">
 
     <style>
         :root {
@@ -52,31 +64,6 @@
         .auth-brand-features li        { color: rgba(255,255,255,.85); font-size: .9rem; }
         .auth-brand-features li i      { color: var(--ke-gold); }
         .auth-brand-footer     { color: rgba(255,255,255,.35); font-size: .75rem; }
-
-        /* Government identifier pill */
-        .ke-gov-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,255,255,.08);
-            border: 1px solid rgba(255,255,255,.18);
-            border-radius: 30px;
-            padding: 5px 14px 5px 5px;
-            margin-bottom: 32px;
-        }
-        .ke-gov-pill .flag-dot {
-            width: 26px; height: 26px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, var(--ke-red) 0 33%, #111 33% 66%, var(--ke-green) 66% 100%);
-            flex-shrink: 0;
-        }
-        .ke-gov-pill span {
-            color: rgba(255,255,255,.75);
-            font-size: .75rem;
-            letter-spacing: .04em;
-            font-weight: 500;
-        }
 
         /* Card */
         .auth-card {
@@ -151,15 +138,9 @@
     <div class="auth-brand">
         <div class="auth-brand-inner">
 
-            <a href="<?php echo e(route('login')); ?>" class="auth-brand-logo">
-                <img src="<?php echo e(asset('assets/img/logo.webp')); ?>" alt="FlowDesk">
-                <span>FlowDesk</span>
+            <a href="<?php echo e(route('login')); ?>" class="d-block mb-4">
+                <img src="<?php echo e(asset('assets/img/logo.png')); ?>" alt="FlowDesk" style="max-width:500px; height:auto;">
             </a>
-
-            <div class="ke-gov-pill">
-                <div class="flag-dot"></div>
-                <span>Republic of Kenya &mdash; Official System</span>
-            </div>
 
             <div class="auth-brand-content">
                 <h2 class="auth-brand-heading">Travel Information Management System</h2>
@@ -175,7 +156,7 @@
             </div>
 
             <div class="auth-brand-footer">
-                &copy; <?php echo e(date('Y')); ?> Government of Kenya. All rights reserved.
+                &copy; <?php echo e(date('Y')); ?> State Department For ICT and Digital Economy. All rights reserved.
             </div>
 
         </div>
@@ -206,6 +187,19 @@
 <script src="<?php echo e(asset('assets/js/main.js')); ?>"></script>
 <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
 
+<script src="<?php echo e(asset('assets/vendor/notie/notie.min.js')); ?>"></script>
+<script>
+    window.addEventListener('notify', e => {
+        const map = { success: 1, warning: 2, error: 3, info: 4 };
+        notie.alert({ type: map[e.detail.type] ?? 4, text: e.detail.message, stay: false, time: 4 });
+    });
+    <?php if(session('notify_type')): ?>
+    document.addEventListener('DOMContentLoaded', () => {
+        const map = { success: 1, warning: 2, error: 3, info: 4 };
+        notie.alert({ type: map['<?php echo e(session('notify_type')); ?>'] ?? 4, text: '<?php echo e(session('notify_message')); ?>', stay: false, time: 4 });
+    });
+    <?php endif; ?>
+</script>
 </body>
 </html>
 <?php /**PATH D:\Myprojects\FlowDesk\resources\views/components/layouts/auth.blade.php ENDPATH**/ ?>

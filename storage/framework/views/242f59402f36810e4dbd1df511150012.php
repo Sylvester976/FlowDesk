@@ -3,24 +3,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'FlowDesk') }} &mdash; @yield('title', 'Dashboard')</title>
+    <title><?php echo e(config('app.name', 'FlowDesk')); ?> &mdash; <?php echo $__env->yieldContent('title', 'Dashboard'); ?></title>
 
-    <link href="{{ asset('assets/img/cos.ico') }}" rel="icon">
-    <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="<?php echo e(asset('assets/img/cos.ico')); ?>" rel="icon">
+    <link href="<?php echo e(asset('assets/img/apple-touch-icon.png')); ?>" rel="apple-touch-icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-    <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/phosphor-icons/phosphor-icons.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/flatpickr/flatpickr.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/choices.js/choices.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/notie/notie.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/bootstrap/css/bootstrap.min.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/remixicon/remixicon.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/phosphor-icons/phosphor-icons.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/simple-datatables/style.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/flatpickr/flatpickr.min.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/choices.js/choices.min.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/notie/notie.min.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/css/main.css')); ?>" rel="stylesheet">
 
     <style>
         :root {
@@ -177,17 +177,16 @@
         }
     </style>
 
-    @livewireStyles
-    @stack('styles')
+    <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
+
+    <?php echo $__env->yieldPushContent('styles'); ?>
 </head>
 <body>
 
-{{-- ══════════════════════════════════════════
-     PAGE LOADER
-══════════════════════════════════════════ --}}
+
 <div id="page-loader">
     <div class="loader-logo">
-        <img src="{{ asset('assets/img/logo.png') }}" alt="FlowDesk">
+        <img src="<?php echo e(asset('assets/img/logo.png')); ?>" alt="FlowDesk">
     </div>
     <div class="loader-runway">
         <div class="loader-runway-fill"></div>
@@ -196,13 +195,11 @@
     <div class="loader-text">Loading FlowDesk&hellip;</div>
 </div>
 
-{{-- ══════════════════════════════════════════
-     HEADER
-══════════════════════════════════════════ --}}
+
 <header class="header">
     <div class="header-left">
-        <a href="{{ route('dashboard') }}" class="header-logo">
-            <img src="{{ asset('assets/img/logo.png') }}" alt="FlowDesk" style="height:34px;width:auto;">
+        <a href="<?php echo e(route('dashboard')); ?>" class="header-logo">
+            <img src="<?php echo e(asset('assets/img/logo.png')); ?>" alt="FlowDesk" style="height:34px;width:auto;">
         </a>
         <button class="sidebar-toggle" title="Toggle Sidebar">
             <i class="bi bi-list"></i>
@@ -220,7 +217,7 @@
     <div class="header-right">
         <div class="header-actions-desktop">
 
-            {{-- Theme toggle --}}
+            
             <button class="header-action theme-toggle" title="Toggle Theme">
                 <i class="ph ph-moon theme-icon-dark"></i>
                 <i class="ph ph-sun theme-icon-light"></i>
@@ -228,21 +225,21 @@
 
             <div class="header-divider"></div>
 
-            {{-- Notifications --}}
+            
             <div class="header-action dropdown notification-dropdown">
                 <button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
                     <i class="bi bi-bell"></i>
-                    @if(auth()->user()->hasPendingPostTripUploads())
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->hasPendingPostTripUploads()): ?>
                         <span class="badge">1</span>
-                    @endif
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <div class="notification-header">
                         <h6>Notifications</h6>
                     </div>
                     <div class="notification-list">
-                        @if(auth()->user()->hasPendingPostTripUploads())
-                            <a href="{{ route('travel.post-trip') }}" class="notification-item unread d-block text-decoration-none">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->hasPendingPostTripUploads()): ?>
+                            <a href="<?php echo e(route('travel.post-trip')); ?>" class="notification-item unread d-block text-decoration-none">
                                 <div class="notification-icon warning">
                                     <i class="bi bi-upload"></i>
                                 </div>
@@ -252,11 +249,11 @@
                                     <div class="notification-time"><i class="bi bi-clock"></i> Action required</div>
                                 </div>
                             </a>
-                        @else
+                        <?php else: ?>
                             <div class="p-3 text-center text-muted small">
                                 <i class="bi bi-check-circle me-1 text-success"></i> All caught up
                             </div>
-                        @endif
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     </div>
                     <div class="notification-footer">
                         <a href="#">View all notifications</a>
@@ -264,47 +261,49 @@
                 </div>
             </div>
 
-            {{-- User dropdown --}}
+            
             <div class="header-action dropdown user-dropdown">
                 <button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    @if(auth()->user()->profile_photo)
-                        <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt="{{ auth()->user()->full_name }}" class="avatar">
-                    @else
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->profile_photo): ?>
+                        <img src="<?php echo e(Storage::url(auth()->user()->profile_photo)); ?>" alt="<?php echo e(auth()->user()->full_name); ?>" class="avatar">
+                    <?php else: ?>
                         <div class="user-initials-avatar">
-                            {{ strtoupper(substr(auth()->user()->first_name,0,1).substr(auth()->user()->last_name,0,1)) }}
+                            <?php echo e(strtoupper(substr(auth()->user()->first_name,0,1).substr(auth()->user()->last_name,0,1))); ?>
+
                         </div>
-                    @endif
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     <div class="user-info">
-                        <span class="user-name">{{ auth()->user()->full_name }}</span>
-                        <span class="user-role">{{ auth()->user()->role?->label }}</span>
+                        <span class="user-name"><?php echo e(auth()->user()->full_name); ?></span>
+                        <span class="user-role"><?php echo e(auth()->user()->role?->label); ?></span>
                     </div>
                     <i class="bi bi-chevron-down user-arrow"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <div class="user-dropdown-header">
-                        @if(auth()->user()->profile_photo)
-                            <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt="" class="user-dropdown-avatar">
-                        @else
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->profile_photo): ?>
+                            <img src="<?php echo e(Storage::url(auth()->user()->profile_photo)); ?>" alt="" class="user-dropdown-avatar">
+                        <?php else: ?>
                             <div class="user-initials-avatar me-2" style="width:44px;height:44px;font-size:.9rem;">
-                                {{ strtoupper(substr(auth()->user()->first_name,0,1).substr(auth()->user()->last_name,0,1)) }}
+                                <?php echo e(strtoupper(substr(auth()->user()->first_name,0,1).substr(auth()->user()->last_name,0,1))); ?>
+
                             </div>
-                        @endif
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         <div class="user-dropdown-info">
-                            <div class="user-dropdown-name">{{ auth()->user()->full_name }}</div>
-                            <div class="user-dropdown-email">{{ auth()->user()->email }}</div>
+                            <div class="user-dropdown-name"><?php echo e(auth()->user()->full_name); ?></div>
+                            <div class="user-dropdown-email"><?php echo e(auth()->user()->email); ?></div>
                         </div>
                     </div>
                     <div class="user-dropdown-body">
-                        <a class="user-dropdown-item" href="{{ route('profile.edit') }}">
+                        <a class="user-dropdown-item" href="<?php echo e(route('profile.edit')); ?>">
                             <i class="bi bi-person"></i><span>My Profile</span>
                         </a>
-                        <a class="user-dropdown-item" href="{{ route('travel.index') }}">
+                        <a class="user-dropdown-item" href="<?php echo e(route('travel.index')); ?>">
                             <i class="bi bi-airplane"></i><span>My Applications</span>
                         </a>
                     </div>
                     <div class="user-dropdown-footer">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('logout')); ?>">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="user-dropdown-item user-dropdown-logout w-100 border-0 bg-transparent text-start">
                                 <i class="bi bi-box-arrow-right"></i><span>Sign Out</span>
                             </button>
@@ -325,7 +324,7 @@
     </div>
 </header>
 
-{{-- Mobile search --}}
+
 <div class="mobile-search">
     <form class="search-form">
         <input type="search" placeholder="Search..." autocomplete="off">
@@ -333,155 +332,153 @@
     </form>
 </div>
 
-{{-- ══════════════════════════════════════════
-     SIDEBAR — icon strip + panel (PowerAdmin pattern)
-══════════════════════════════════════════ --}}
+
 <aside class="sidebar">
 
-    {{-- Icon strip --}}
+    
     <div class="sidebar-strip">
         <div class="sidebar-strip-logo">
-            <a href="{{ route('dashboard') }}">
-                <img src="{{ asset('assets/img/cos.ico') }}" alt="FlowDesk" style="height:28px;width:auto;">
+            <a href="<?php echo e(route('dashboard')); ?>">
+                <img src="<?php echo e(asset('assets/img/cos.ico')); ?>" alt="FlowDesk" style="height:28px;width:auto;">
             </a>
         </div>
 
         <nav class="sidebar-strip-nav">
             <ul class="strip-menu">
                 <li>
-                    <button class="strip-item {{ request()->routeIs('dashboard*') ? 'active' : '' }}"
+                    <button class="strip-item <?php echo e(request()->routeIs('dashboard*') ? 'active' : ''); ?>"
                         data-panel="main"
                         data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Main">
                         <i class="ph ph-squares-four"></i>
                     </button>
                 </li>
                 <li>
-                    <button class="strip-item {{ request()->routeIs('travel*') ? 'active' : '' }}"
+                    <button class="strip-item <?php echo e(request()->routeIs('travel*') ? 'active' : ''); ?>"
                         data-panel="travel"
                         data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Travel">
                         <i class="ph ph-airplane"></i>
                     </button>
                 </li>
-                @if(auth()->user()->canViewAllApplications() || auth()->user()->canViewOutOfOffice())
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->canViewAllApplications() || auth()->user()->canViewOutOfOffice()): ?>
                 <li>
-                    <button class="strip-item {{ request()->routeIs('oversight*') ? 'active' : '' }}"
+                    <button class="strip-item <?php echo e(request()->routeIs('oversight*') ? 'active' : ''); ?>"
                         data-panel="oversight"
                         data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Oversight">
                         <i class="ph ph-binoculars"></i>
                     </button>
                 </li>
-                @endif
-                @if(auth()->user()->canManageUsers())
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->canManageUsers()): ?>
                 <li>
-                    <button class="strip-item {{ request()->routeIs('admin*') ? 'active' : '' }}"
+                    <button class="strip-item <?php echo e(request()->routeIs('admin*') ? 'active' : ''); ?>"
                         data-panel="admin"
                         data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Administration">
                         <i class="ph ph-users-three"></i>
                     </button>
                 </li>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </ul>
         </nav>
 
         <div class="sidebar-strip-bottom">
-            <a href="{{ route('travel.rates') }}" class="strip-item"
+            <a href="<?php echo e(route('travel.rates')); ?>" class="strip-item"
                 data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Travel Rates">
                 <i class="bi bi-currency-dollar"></i>
             </a>
-            <a href="{{ route('profile.edit') }}" class="sidebar-strip-avatar"
-                data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="{{ auth()->user()->full_name }}">
-                @if(auth()->user()->profile_photo)
-                    <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt="">
-                @else
+            <a href="<?php echo e(route('profile.edit')); ?>" class="sidebar-strip-avatar"
+                data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="<?php echo e(auth()->user()->full_name); ?>">
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->profile_photo): ?>
+                    <img src="<?php echo e(Storage::url(auth()->user()->profile_photo)); ?>" alt="">
+                <?php else: ?>
                     <div class="user-initials-avatar" style="width:32px;height:32px;font-size:.7rem;">
-                        {{ strtoupper(substr(auth()->user()->first_name,0,1).substr(auth()->user()->last_name,0,1)) }}
+                        <?php echo e(strtoupper(substr(auth()->user()->first_name,0,1).substr(auth()->user()->last_name,0,1))); ?>
+
                     </div>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </a>
         </div>
     </div>
 
-    {{-- Nav panels --}}
+    
     <div class="sidebar-panel">
 
-        {{-- Main / Dashboard --}}
-        <div class="sidebar-panel-section {{ request()->routeIs('dashboard*') ? 'active' : '' }}" data-section="main">
+        
+        <div class="sidebar-panel-section <?php echo e(request()->routeIs('dashboard*') ? 'active' : ''); ?>" data-section="main">
             <div class="sidebar-panel-header">
                 <h6>Main</h6>
                 <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
             </div>
             <ul class="panel-nav">
-                <li><a class="panel-link {{ request()->routeIs('dashboard*') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a></li>
+                <li><a class="panel-link <?php echo e(request()->routeIs('dashboard*') ? 'active' : ''); ?>" href="<?php echo e(route('dashboard')); ?>">Dashboard</a></li>
             </ul>
         </div>
 
-        {{-- Travel --}}
-        <div class="sidebar-panel-section {{ request()->routeIs('travel*') ? 'active' : '' }}" data-section="travel">
+        
+        <div class="sidebar-panel-section <?php echo e(request()->routeIs('travel*') ? 'active' : ''); ?>" data-section="travel">
             <div class="sidebar-panel-header">
                 <h6>Travel</h6>
                 <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
             </div>
             <ul class="panel-nav">
-                <li><a class="panel-link {{ request()->routeIs('travel.index') ? 'active' : '' }}" href="{{ route('travel.index') }}">My Applications</a></li>
-                <li><a class="panel-link {{ request()->routeIs('travel.create') ? 'active' : '' }}" href="{{ route('travel.create') }}">New Application</a></li>
-                <li><a class="panel-link {{ request()->routeIs('travel.post-trip') ? 'active' : '' }}" href="{{ route('travel.post-trip') }}">
+                <li><a class="panel-link <?php echo e(request()->routeIs('travel.index') ? 'active' : ''); ?>" href="<?php echo e(route('travel.index')); ?>">My Applications</a></li>
+                <li><a class="panel-link <?php echo e(request()->routeIs('travel.create') ? 'active' : ''); ?>" href="<?php echo e(route('travel.create')); ?>">New Application</a></li>
+                <li><a class="panel-link <?php echo e(request()->routeIs('travel.post-trip') ? 'active' : ''); ?>" href="<?php echo e(route('travel.post-trip')); ?>">
                     Post-Trip Upload
-                    @if(auth()->user()->hasPendingPostTripUploads())
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->hasPendingPostTripUploads()): ?>
                         <span class="badge bg-danger ms-1" style="font-size:.65rem;">!</span>
-                    @endif
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 </a></li>
-                @if(auth()->user()->isSupervisor())
-                <li><a class="panel-link {{ request()->routeIs('travel.concurrence') ? 'active' : '' }}" href="{{ route('travel.concurrence') }}">Concurrence Queue</a></li>
-                @endif
-                <li><a class="panel-link {{ request()->routeIs('travel.rates') ? 'active' : '' }}" href="{{ route('travel.rates') }}">Travel Rates</a></li>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->isSupervisor()): ?>
+                <li><a class="panel-link <?php echo e(request()->routeIs('travel.concurrence') ? 'active' : ''); ?>" href="<?php echo e(route('travel.concurrence')); ?>">Concurrence Queue</a></li>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <li><a class="panel-link <?php echo e(request()->routeIs('travel.rates') ? 'active' : ''); ?>" href="<?php echo e(route('travel.rates')); ?>">Travel Rates</a></li>
             </ul>
         </div>
 
-        {{-- Oversight --}}
-        @if(auth()->user()->canViewAllApplications() || auth()->user()->canViewOutOfOffice())
-        <div class="sidebar-panel-section {{ request()->routeIs('oversight*') ? 'active' : '' }}" data-section="oversight">
+        
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->canViewAllApplications() || auth()->user()->canViewOutOfOffice()): ?>
+        <div class="sidebar-panel-section <?php echo e(request()->routeIs('oversight*') ? 'active' : ''); ?>" data-section="oversight">
             <div class="sidebar-panel-header">
                 <h6>Oversight</h6>
                 <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
             </div>
             <ul class="panel-nav">
-                @if(auth()->user()->canViewAllApplications())
-                <li><a class="panel-link {{ request()->routeIs('oversight.all-applications') ? 'active' : '' }}" href="{{ route('oversight.all-applications') }}">All Applications</a></li>
-                <li><a class="panel-link {{ request()->routeIs('oversight.docket') ? 'active' : '' }}" href="{{ route('oversight.docket') }}">Days Docket</a></li>
-                @endif
-                <li><a class="panel-link {{ request()->routeIs('oversight.out-of-office') ? 'active' : '' }}" href="{{ route('oversight.out-of-office') }}">Out of Office</a></li>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->canViewAllApplications()): ?>
+                <li><a class="panel-link <?php echo e(request()->routeIs('oversight.all-applications') ? 'active' : ''); ?>" href="<?php echo e(route('oversight.all-applications')); ?>">All Applications</a></li>
+                <li><a class="panel-link <?php echo e(request()->routeIs('oversight.docket') ? 'active' : ''); ?>" href="<?php echo e(route('oversight.docket')); ?>">Days Docket</a></li>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                <li><a class="panel-link <?php echo e(request()->routeIs('oversight.out-of-office') ? 'active' : ''); ?>" href="<?php echo e(route('oversight.out-of-office')); ?>">Out of Office</a></li>
             </ul>
         </div>
-        @endif
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
-        {{-- Administration --}}
-        @if(auth()->user()->canManageUsers())
-        <div class="sidebar-panel-section {{ request()->routeIs('admin*') ? 'active' : '' }}" data-section="admin">
+        
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->canManageUsers()): ?>
+        <div class="sidebar-panel-section <?php echo e(request()->routeIs('admin*') ? 'active' : ''); ?>" data-section="admin">
             <div class="sidebar-panel-header">
                 <h6>Administration</h6>
                 <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
             </div>
             <ul class="panel-nav">
-                <li><a class="panel-link {{ request()->routeIs('admin.staff*') ? 'active' : '' }}" href="{{ route('admin.staff.index') }}">Staff Management</a></li>
-                <li><a class="panel-link {{ request()->routeIs('admin.org*') ? 'active' : '' }}" href="{{ route('admin.org.index') }}">Org Structure</a></li>
-                @if(auth()->user()->canAssignRoles())
-                <li><a class="panel-link {{ request()->routeIs('admin.roles*') ? 'active' : '' }}" href="{{ route('admin.roles.index') }}">Roles &amp; Hierarchy</a></li>
-                @endif
+                <li><a class="panel-link <?php echo e(request()->routeIs('admin.staff*') ? 'active' : ''); ?>" href="<?php echo e(route('admin.staff.index')); ?>">Staff Management</a></li>
+                <li><a class="panel-link <?php echo e(request()->routeIs('admin.org*') ? 'active' : ''); ?>" href="<?php echo e(route('admin.org.index')); ?>">Org Structure</a></li>
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->canAssignRoles()): ?>
+                <li><a class="panel-link <?php echo e(request()->routeIs('admin.roles*') ? 'active' : ''); ?>" href="<?php echo e(route('admin.roles.index')); ?>">Roles &amp; Hierarchy</a></li>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </ul>
         </div>
-        @endif
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
     </div>
 </aside>
 
 <div class="sidebar-overlay"></div>
 
-{{-- ══════════════════════════════════════════
-     MAIN CONTENT
-══════════════════════════════════════════ --}}
+
 <main class="main">
     <div class="main-content">
-        {{ $slot }}
+        <?php echo e($slot); ?>
+
     </div>
 
     <footer class="footer">
@@ -492,7 +489,7 @@
                 <a href="#">Help</a>
             </div>
             <div class="footer-copyright">
-                &copy; {{ date('Y') }} Government of Kenya &mdash; State Department of ICT
+                &copy; <?php echo e(date('Y')); ?> Government of Kenya &mdash; State Department of ICT
             </div>
         </div>
     </footer>
@@ -500,20 +497,19 @@
 
 <a href="#" class="back-to-top"><i class="bi bi-arrow-up"></i></a>
 
-{{-- ══════════════════════════════════════════
-     SCRIPTS
-══════════════════════════════════════════ --}}
-<script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
-<script src="{{ asset('assets/vendor/flatpickr/flatpickr.min.js') }}"></script>
-<script src="{{ asset('assets/vendor/choices.js/choices.min.js') }}"></script>
-<script src="{{ asset('assets/js/theme.js') }}"></script>
-<script src="{{ asset('assets/js/main.js') }}"></script>
-<script src="{{ asset('assets/js/apps-sidebar-toggle.js') }}"></script>
 
-@livewireScripts
+<script src="<?php echo e(asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/vendor/simple-datatables/simple-datatables.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/vendor/flatpickr/flatpickr.min.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/vendor/choices.js/choices.min.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/theme.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/main.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/apps-sidebar-toggle.js')); ?>"></script>
 
-<script src="{{ asset('assets/vendor/notie/notie.min.js') }}"></script>
+<?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
+
+
+<script src="<?php echo e(asset('assets/vendor/notie/notie.min.js')); ?>"></script>
 <script>
     // Hide loader when page is ready
     window.addEventListener('load', () => {
@@ -530,12 +526,12 @@
     });
 
     // Session flash toast (post-redirect)
-    @if(session('notify_type'))
+    <?php if(session('notify_type')): ?>
     document.addEventListener('DOMContentLoaded', () => {
         const map = { success: 1, warning: 2, error: 3, info: 4 };
-        notie.alert({ type: map['{{ session('notify_type') }}'] ?? 4, text: '{{ session('notify_message') }}', stay: false, time: 5 });
+        notie.alert({ type: map['<?php echo e(session('notify_type')); ?>'] ?? 4, text: '<?php echo e(session('notify_message')); ?>', stay: false, time: 5 });
     });
-    @endif
+    <?php endif; ?>
 
     // Re-init vendor libs after Livewire updates
     document.addEventListener('livewire:navigated', () => {
@@ -546,6 +542,7 @@
     });
 </script>
 
-@stack('scripts')
+<?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
+<?php /**PATH D:\Myprojects\FlowDesk\resources\views/components/layouts/app.blade.php ENDPATH**/ ?>

@@ -3,30 +3,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config('app.name', 'FlowDesk') }} &mdash; @yield('title', 'Sign In')</title>
+    <title><?php echo e(config('app.name', 'FlowDesk')); ?> &mdash; <?php echo $__env->yieldContent('title', 'Sign In'); ?></title>
 
-    <link href="{{ asset('assets/img/cos.ico') }}" rel="icon">
-    <link href="{{ asset('assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="<?php echo e(asset('assets/img/cos.ico')); ?>" rel="icon">
+    <link href="<?php echo e(asset('assets/img/apple-touch-icon.png')); ?>" rel="apple-touch-icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
-    <style>
-        .notie-container {
-            width: 320px !important;
-            right: 20px !important;
-            left: auto !important;
-            top: 20px !important;
-            border-radius: 8px !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,.15) !important;
-            font-size: .88rem !important;
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/notie/4.3.1/notie.min.css">
+    <link href="<?php echo e(asset('assets/vendor/bootstrap/css/bootstrap.min.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/bootstrap-icons/bootstrap-icons.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/css/main.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/vendor/notie/notie.min.css')); ?>" rel="stylesheet">
 
     <style>
         :root {
@@ -127,18 +116,19 @@
         .auth-footer-links a:hover { color: var(--ke-navy); }
     </style>
 
-    @livewireStyles
+    <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
+
 </head>
 <body>
 
 <div class="auth-layout">
 
-    {{-- Left brand panel --}}
+    
     <div class="auth-brand">
         <div class="auth-brand-inner">
 
-            <a href="{{ route('login') }}" class="d-block mb-4">
-                <img src="{{ asset('assets/img/logo.png') }}" alt="FlowDesk" style="max-width:500px; height:auto;">
+            <a href="<?php echo e(route('login')); ?>" class="d-block mb-4">
+                <img src="<?php echo e(asset('assets/img/logo.png')); ?>" alt="FlowDesk" style="max-width:220px; height:auto;">
             </a>
 
             <div class="auth-brand-content">
@@ -155,18 +145,19 @@
             </div>
 
             <div class="auth-brand-footer">
-                &copy; {{ date('Y') }} State Department For ICT and Digital Economy. All rights reserved.
+                &copy; <?php echo e(date('Y')); ?> State Department of ICT and Digital Economy. All rights reserved.
             </div>
 
         </div>
     </div>
 
-    {{-- Right form panel --}}
+    
     <div class="auth-main">
         <div class="auth-container">
             <div class="auth-card">
                 <div class="auth-card-top-stripe"></div>
-                {{ $slot }}
+                <?php echo e($slot); ?>
+
             </div>
         </div>
         <footer class="auth-footer">
@@ -180,22 +171,24 @@
 
 </div>
 
-<script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('assets/js/theme.js') }}"></script>
-<script src="{{ asset('assets/js/main.js') }}"></script>
-@livewireScripts
-<script src="{{ asset('assets/vendor/notie/notie.min.js') }}"></script>
+<script src="<?php echo e(asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/theme.js')); ?>"></script>
+<script src="<?php echo e(asset('assets/js/main.js')); ?>"></script>
+
+<?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
+
+<script src="<?php echo e(asset('assets/vendor/notie/notie.min.js')); ?>"></script>
 <script>
     window.addEventListener('notify', e => {
         const map = { success: 1, warning: 2, error: 3, info: 4 };
-        notie.alert({ type: map[e.detail.type] ?? 4, text: e.detail.message, stay: false, time: 4 });
+        notie.alert({
+            type: map[e.detail.type] ?? 4,
+            text: e.detail.message,
+            stay: false,
+            time: 4,
+        });
     });
-    @if(session('notify_type'))
-    document.addEventListener('DOMContentLoaded', () => {
-        const map = { success: 1, warning: 2, error: 3, info: 4 };
-        notie.alert({ type: map['{{ session('notify_type') }}'] ?? 4, text: '{{ session('notify_message') }}', stay: false, time: 4 });
-    });
-    @endif
 </script>
 </body>
 </html>
+<?php /**PATH D:\Myprojects\FlowDesk\resources\views\components/layouts/auth.blade.php ENDPATH**/ ?>

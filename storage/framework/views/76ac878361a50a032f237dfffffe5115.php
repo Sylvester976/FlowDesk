@@ -1,18 +1,18 @@
 <div>
-    {{-- Show flash notify from previous redirect --}}
-    @if(session('notify_type'))
+    
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('notify_type')): ?>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const map = { success: 1, warning: 2, error: 3, info: 4 };
             notie.alert({
-                type: map['{{ session('notify_type') }}'] ?? 4,
-                text: '{{ session('notify_message') }}',
+                type: map['<?php echo e(session('notify_type')); ?>'] ?? 4,
+                text: '<?php echo e(session('notify_message')); ?>',
                 stay: false,
                 time: 4,
             });
         });
     </script>
-    @endif
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
     <div class="auth-card-header text-center">
         <div class="mb-3">
@@ -26,11 +26,12 @@
 
     <div class="auth-form">
 
-        @if(session('resent'))
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('resent')): ?>
             <div class="alert alert-success py-2 small text-center mb-3">
-                <i class="bi bi-check-circle me-1"></i> {{ session('resent') }}
+                <i class="bi bi-check-circle me-1"></i> <?php echo e(session('resent')); ?>
+
             </div>
-        @endif
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
         <form wire:submit="submit" novalidate>
             <div class="form-group">
@@ -38,7 +39,14 @@
                 <input
                     type="text"
                     wire:model="code"
-                    class="form-control text-center fw-bold @error('code') is-invalid @enderror"
+                    class="form-control text-center fw-bold <?php $__errorArgs = ['code'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                     placeholder="000000"
                     maxlength="6"
                     inputmode="numeric"
@@ -46,9 +54,16 @@
                     autofocus
                     style="font-size:1.8rem; letter-spacing:.6em; padding:14px 10px;"
                 >
-                @error('code')
-                    <div class="invalid-feedback text-center">{{ $message }}</div>
-                @enderror
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['code'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <div class="invalid-feedback text-center"><?php echo e($message); ?></div>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
 
             <button type="submit" class="btn btn-primary btn-block" wire:loading.attr="disabled">
@@ -69,10 +84,11 @@
         </div>
 
         <div class="text-center mt-3">
-            <a href="{{ route('login') }}" class="small text-muted text-decoration-none">
+            <a href="<?php echo e(route('login')); ?>" class="small text-muted text-decoration-none">
                 <i class="bi bi-arrow-left me-1"></i> Back to sign in
             </a>
         </div>
 
     </div>
 </div>
+<?php /**PATH D:\Myprojects\FlowDesk\resources\views/livewire/auth/verify-otp.blade.php ENDPATH**/ ?>
