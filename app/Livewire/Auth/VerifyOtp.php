@@ -23,7 +23,7 @@ class VerifyOtp extends Component
     public function mount(): void
     {
         // Guard — must have come from login step
-        if (!session('otp_user_id')) {
+        if (! session('otp_user_id')) {
             $this->redirect(route('login'), navigate: true);
         }
     }
@@ -33,9 +33,9 @@ class VerifyOtp extends Component
         $this->validate();
 
         $userId = session('otp_user_id');
-        $user = User::find($userId);
+        $user   = User::find($userId);
 
-        if (!$user) {
+        if (! $user) {
             $this->redirect(route('login'), navigate: true);
             return;
         }
@@ -47,7 +47,7 @@ class VerifyOtp extends Component
             ->first();
 
         // No OTP found
-        if (!$otp) {
+        if (! $otp) {
             $this->addError('code', 'No active code found. Please go back and sign in again.');
             return;
         }
@@ -101,6 +101,41 @@ class VerifyOtp extends Component
         $this->redirect($this->dashboardRoute($user), navigate: true);
     }
 
+    public function resend(): void
+    {
+        $userId = session('otp_user_id');
+        $user   = User::find($userId);
+
+        if (! $user) {
+            $this->redirect(route('login'), navigate: true);
+            return;
+        }
+
+        // Invalidate old OTPs
+        Otp::where('user_id', $user->id)->where('used', false)->delete();
+
+        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        Otp::create([
+            'user_id'    => $user->id,
+            'code'       => $code,
+            'expires_at' => now()->addMinutes(5),
+            'used'       => false,
+            'attempts'   => 0,
+            'ip_address' => request()->ip(),
+        ]);
+
+        Mail::to($user->email)->send(new OtpMail($user, $code));
+
+        AuthLog::record('otp_sent', $user->id, $user->email, 'Resend requested');
+
+        $this->canResend    = false;
+        $this->resendCooldown = 60;
+        $this->code         = '';
+
+        session()->flash('resent', 'A new code has been sent to your email.');
+    }
+
     private function dashboardRoute(User $user): string
     {
         if ($user->isSuperAdmin() || $user->isPS()) {
@@ -116,41 +151,6 @@ class VerifyOtp extends Component
         }
 
         return route('dashboard.staff');
-    }
-
-    public function resend(): void
-    {
-        $userId = session('otp_user_id');
-        $user = User::find($userId);
-
-        if (!$user) {
-            $this->redirect(route('login'), navigate: true);
-            return;
-        }
-
-        // Invalidate old OTPs
-        Otp::where('user_id', $user->id)->where('used', false)->delete();
-
-        $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
-        Otp::create([
-            'user_id' => $user->id,
-            'code' => $code,
-            'expires_at' => now()->addMinutes(5),
-            'used' => false,
-            'attempts' => 0,
-            'ip_address' => request()->ip(),
-        ]);
-
-        Mail::to($user->email)->send(new OtpMail($user, $code));
-
-        AuthLog::record('otp_sent', $user->id, $user->email, 'Resend requested');
-
-        $this->canResend = false;
-        $this->resendCooldown = 60;
-        $this->code = '';
-
-        session()->flash('resent', 'A new code has been sent to your email.');
     }
 
     public function render()
