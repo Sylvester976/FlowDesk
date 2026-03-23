@@ -120,7 +120,18 @@
                                         </td>
 
                                         <td>
-                                            <span class="badge bg-success">
+                                            @php
+                                                $status = strtolower($recent_assignment->status);
+                                            @endphp
+                                            <span class="badge
+                                                @if($status === 'success')
+                                                    bg-success
+                                                @elseif($status === 'pending')
+                                                    bg-warning
+                                                @else
+                                                    bg-danger
+                                                @endif
+                                            ">
                                                 {{ $recent_assignment->status }}
                                             </span>
                                         </td>
