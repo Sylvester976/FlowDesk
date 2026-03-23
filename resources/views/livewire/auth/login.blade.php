@@ -1,52 +1,67 @@
-<div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
+<div>
+    <div class="auth-card-header">
+        <h1 class="auth-title">Welcome back</h1>
+        <p class="auth-subtitle">Enter your official credentials to access your account</p>
+    </div>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
+    <form wire:submit="submit" class="auth-form" novalidate>
 
-    <form method="POST" wire:submit="login" class="flex flex-col gap-6">
-        <!-- Email Address -->
-        <flux:input
-            wire:model="email"
-            :label="__('Email address')"
-            type="email"
-            required
-            autofocus
-            autocomplete="email"
-            placeholder="email@example.com"
-        />
-
-        <!-- Password -->
-        <div class="relative">
-            <flux:input
-                wire:model="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="current-password"
-                :placeholder="__('Password')"
-                viewable
-            />
-
-            @if (Route::has('password.request'))
-                <flux:link class="absolute end-0 top-0 text-sm" :href="route('password.request')" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </flux:link>
-            @endif
+        <div class="form-group">
+            <label for="email" class="form-label">Official Email</label>
+            <input
+                type="email"
+                wire:model="email"
+                id="email"
+                class="form-control @error('email') is-invalid @enderror"
+                placeholder="name@organization.go.ke"
+                autocomplete="email"
+                autofocus
+            >
+            @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
-        <!-- Remember Me -->
-        <flux:checkbox wire:model="remember" :label="__('Remember me')" />
-
-        <div class="flex items-center justify-end">
-            <flux:button variant="primary" type="submit" class="w-full">{{ __('Log in') }}</flux:button>
+        <div class="form-group">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <label for="password" class="form-label mb-0">Password</label>
+                <a href="{{ route('password.request') }}" class="auth-link small">Forgot password?</a>
+            </div>
+            <div class="input-group">
+                <input
+                    type="password"
+                    wire:model="password"
+                    id="password"
+                    class="form-control @error('password') is-invalid @enderror"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                >
+                <button class="btn btn-outline-secondary" type="button" data-toggle-password tabindex="-1">
+                    <i class="bi bi-eye"></i>
+                </button>
+            </div>
+            @error('password')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
         </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" wire:model="remember" id="remember">
+            <label class="form-check-label small" for="remember">Keep me signed in</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" wire:loading.attr="disabled">
+            <span wire:loading.remove>Sign In</span>
+            <span wire:loading>
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Sending code...
+            </span>
+        </button>
+
+        <p class="text-center text-muted mt-3 mb-0" style="font-size:.82rem;">
+            <i class="bi bi-shield-lock me-1"></i>
+            A one-time verification code will be sent to your email.
+        </p>
+
     </form>
-
-    @if (Route::has('register'))
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            <span>{{ __('Don\'t have an account?') }}</span>
-            <flux:link :href="route('register')" wire:navigate>{{ __('Sign up') }}</flux:link>
-        </div>
-    @endif
 </div>
