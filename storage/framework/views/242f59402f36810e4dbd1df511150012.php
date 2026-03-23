@@ -199,7 +199,7 @@
 <header class="header">
     <div class="header-left">
         <a href="<?php echo e(route('dashboard')); ?>" class="header-logo">
-            <img src="<?php echo e(asset('assets/img/logo.png')); ?>" alt="FlowDesk" style="height:34px;width:auto;">
+            <img src="<?php echo e(asset('assets/img/cos.ico')); ?>" alt="FlowDesk" style="height:34px;width:auto;">
         </a>
         <button class="sidebar-toggle" title="Toggle Sidebar">
             <i class="bi bi-list"></i>
@@ -330,6 +330,50 @@
         <input type="search" placeholder="Search..." autocomplete="off">
         <button type="submit"><i class="bi bi-search"></i></button>
     </form>
+</div>
+
+
+<div class="mobile-header-menu">
+    <div class="mobile-header-menu-content">
+
+        
+        <button class="mobile-menu-item theme-toggle">
+            <i class="ph ph-moon theme-icon-dark"></i>
+            <i class="ph ph-sun theme-icon-light"></i>
+            <span class="mobile-menu-label">Theme</span>
+        </button>
+
+        
+        <a href="#" class="mobile-menu-item">
+            <i class="bi bi-bell"></i>
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->hasPendingPostTripUploads()): ?>
+                <span class="badge">1</span>
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+            <span class="mobile-menu-label">Notifications</span>
+        </a>
+
+        
+        <a href="<?php echo e(route('profile.edit')); ?>" class="mobile-menu-item">
+            <i class="bi bi-person"></i>
+            <span class="mobile-menu-label">Profile</span>
+        </a>
+
+        
+        <a href="<?php echo e(route('travel.index')); ?>" class="mobile-menu-item">
+            <i class="bi bi-airplane"></i>
+            <span class="mobile-menu-label">My Applications</span>
+        </a>
+
+        
+        <form method="POST" action="<?php echo e(route('logout')); ?>" style="display:contents;">
+            <?php echo csrf_field(); ?>
+            <button type="submit" class="mobile-menu-item mobile-menu-item-danger">
+                <i class="bi bi-box-arrow-right"></i>
+                <span class="mobile-menu-label">Sign Out</span>
+            </button>
+        </form>
+
+    </div>
 </div>
 
 

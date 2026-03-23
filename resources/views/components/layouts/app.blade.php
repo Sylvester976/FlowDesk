@@ -202,7 +202,7 @@
 <header class="header">
     <div class="header-left">
         <a href="{{ route('dashboard') }}" class="header-logo">
-            <img src="{{ asset('assets/img/logo.png') }}" alt="FlowDesk" style="height:34px;width:auto;">
+            <img src="{{ asset('assets/img/cos.ico') }}" alt="FlowDesk" style="height:34px;width:auto;">
         </a>
         <button class="sidebar-toggle" title="Toggle Sidebar">
             <i class="bi bi-list"></i>
@@ -331,6 +331,50 @@
         <input type="search" placeholder="Search..." autocomplete="off">
         <button type="submit"><i class="bi bi-search"></i></button>
     </form>
+</div>
+
+{{-- Mobile header menu — slides down from three-dots toggle --}}
+<div class="mobile-header-menu">
+    <div class="mobile-header-menu-content">
+
+        {{-- Theme toggle --}}
+        <button class="mobile-menu-item theme-toggle">
+            <i class="ph ph-moon theme-icon-dark"></i>
+            <i class="ph ph-sun theme-icon-light"></i>
+            <span class="mobile-menu-label">Theme</span>
+        </button>
+
+        {{-- Notifications --}}
+        <a href="#" class="mobile-menu-item">
+            <i class="bi bi-bell"></i>
+            @if(auth()->user()->hasPendingPostTripUploads())
+                <span class="badge">1</span>
+            @endif
+            <span class="mobile-menu-label">Notifications</span>
+        </a>
+
+        {{-- Profile --}}
+        <a href="{{ route('profile.edit') }}" class="mobile-menu-item">
+            <i class="bi bi-person"></i>
+            <span class="mobile-menu-label">Profile</span>
+        </a>
+
+        {{-- My Applications --}}
+        <a href="{{ route('travel.index') }}" class="mobile-menu-item">
+            <i class="bi bi-airplane"></i>
+            <span class="mobile-menu-label">My Applications</span>
+        </a>
+
+        {{-- Sign out --}}
+        <form method="POST" action="{{ route('logout') }}" style="display:contents;">
+            @csrf
+            <button type="submit" class="mobile-menu-item mobile-menu-item-danger">
+                <i class="bi bi-box-arrow-right"></i>
+                <span class="mobile-menu-label">Sign Out</span>
+            </button>
+        </form>
+
+    </div>
 </div>
 
 {{-- ══════════════════════════════════════════
