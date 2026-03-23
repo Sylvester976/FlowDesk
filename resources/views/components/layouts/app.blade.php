@@ -168,9 +168,13 @@
         /* Notie compact toast */
         .notie-container {
             width: 320px !important;
-            right: 20px !important;
-            left: auto !important;
-            top: 20px !important;
+            position: fixed !important;
+
+            top: 15% !important;
+            left: 50% !important;
+
+            transform: translate(-50%, -50%) !important;
+
             border-radius: 8px !important;
             box-shadow: 0 4px 20px rgba(0,0,0,.15) !important;
             font-size: .88rem !important;
