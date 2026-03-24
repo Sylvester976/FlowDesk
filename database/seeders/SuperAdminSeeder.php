@@ -10,33 +10,35 @@ class SuperAdminSeeder extends Seeder
 {
     public function run(): void
     {
-        $roleId = DB::table('roles')->where('name', 'superadmin')->value('id');
+        // Use PS role for the system admin
+        $roleId = DB::table('roles')->where('name', 'ps')->value('id');
 
         DB::table('users')->updateOrInsert(
             ['email' => 'admin@flowdesk.go.ke'],
             [
-                'first_name'          => 'System',
-                'last_name'           => 'Administrator',
-                'email'               => 'admin@flowdesk.go.ke',
-                'phone'               => null,
-                'password'            => Hash::make('Admin@1234'),
-                'role_id'             => $roleId,
-                'department_id'       => null,
-                'supervisor_id'       => null,
-                'pf_number'           => 'SA-0001',
-                'id_number'           => null,
-                'passport_number'     => null,
-                'max_days_per_year'   => 365,
-                'days_used_this_year' => 0,
-                'docket_year'         => now()->year,
-                'status'              => 'active',
-                'email_verified_at'   => now(),
-                'created_at'          => now(),
-                'updated_at'          => now(),
+                'first_name'            => 'System',
+                'last_name'             => 'Administrator',
+                'email'                 => 'admin@flowdesk.go.ke',
+                'password'              => Hash::make('Admin@1234'),
+                'role_id'               => $roleId,
+                'job_title_id'          => null,
+                'department_id'         => null,
+                'supervisor_id'         => null,
+                'attached_to_id'        => null,
+                'is_superadmin'         => true,
+                'is_hr_admin'           => true,
+                'pf_number'             => 'SYS-0001',
+                'max_days_per_year'     => 365,
+                'days_used_this_year'   => 0,
+                'docket_year'           => now()->year,
+                'status'                => 'active',
+                'force_password_change' => false,
+                'email_verified_at'     => now(),
+                'created_at'            => now(),
+                'updated_at'            => now(),
             ]
         );
 
-        $this->command->info('Superadmin created: admin@flowdesk.go.ke / Admin@1234');
-        $this->command->warn('Change the password immediately after first login.');
+        $this->command->info('Superadmin seeded: admin@flowdesk.go.ke / Admin@1234');
     }
 }

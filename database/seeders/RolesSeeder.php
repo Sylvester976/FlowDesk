@@ -11,28 +11,12 @@ class RolesSeeder extends Seeder
     {
         $roles = [
             [
-                'name'            => 'superadmin',
-                'label'           => 'Super Administrator',
-                'hierarchy_level' => 0,
-                'can_supervise'   => true,
-                'is_ps'           => false,
-                'is_system'       => true,
-            ],
-            [
                 'name'            => 'ps',
                 'label'           => 'Principal Secretary',
                 'hierarchy_level' => 1,
                 'can_supervise'   => true,
                 'is_ps'           => true,
                 'is_system'       => true,
-            ],
-            [
-                'name'            => 'hr',
-                'label'           => 'Human Resource Officer',
-                'hierarchy_level' => 2,
-                'can_supervise'   => false,
-                'is_ps'           => false,
-                'is_system'       => false,
             ],
             [
                 'name'            => 'secretary',
@@ -43,9 +27,41 @@ class RolesSeeder extends Seeder
                 'is_system'       => false,
             ],
             [
+                'name'            => 'assistant_secretary',
+                'label'           => 'Assistant Secretary',
+                'hierarchy_level' => 3,
+                'can_supervise'   => true,
+                'is_ps'           => false,
+                'is_system'       => false,
+            ],
+            [
                 'name'            => 'director',
                 'label'           => 'Director',
-                'hierarchy_level' => 3,
+                'hierarchy_level' => 4,
+                'can_supervise'   => true,
+                'is_ps'           => false,
+                'is_system'       => false,
+            ],
+            [
+                'name'            => 'deputy_director',
+                'label'           => 'Deputy Director',
+                'hierarchy_level' => 5,
+                'can_supervise'   => true,
+                'is_ps'           => false,
+                'is_system'       => false,
+            ],
+            [
+                'name'            => 'assistant_director',
+                'label'           => 'Assistant Director',
+                'hierarchy_level' => 6,
+                'can_supervise'   => true,
+                'is_ps'           => false,
+                'is_system'       => false,
+            ],
+            [
+                'name'            => 'principal_officer',
+                'label'           => 'Principal Officer',
+                'hierarchy_level' => 7,
                 'can_supervise'   => true,
                 'is_ps'           => false,
                 'is_system'       => false,
@@ -53,7 +69,7 @@ class RolesSeeder extends Seeder
             [
                 'name'            => 'senior_officer',
                 'label'           => 'Senior Officer',
-                'hierarchy_level' => 4,
+                'hierarchy_level' => 8,
                 'can_supervise'   => true,
                 'is_ps'           => false,
                 'is_system'       => false,
@@ -61,7 +77,7 @@ class RolesSeeder extends Seeder
             [
                 'name'            => 'officer',
                 'label'           => 'Officer',
-                'hierarchy_level' => 5,
+                'hierarchy_level' => 9,
                 'can_supervise'   => false,
                 'is_ps'           => false,
                 'is_system'       => false,
@@ -77,5 +93,16 @@ class RolesSeeder extends Seeder
                 ])
             );
         }
+
+        // Reassign any users on old system roles to PS before deleting
+        $psId = DB::table('roles')->where('name', 'ps')->value('id');
+        DB::table('users')->whereIn('role_id',
+            DB::table('roles')->whereIn('name', ['superadmin', 'hr'])->pluck('id')
+        )->update(['role_id' => $psId]);
+
+        // Now safe to delete
+        DB::table('roles')->whereIn('name', ['superadmin', 'hr'])->delete();
+
+        $this->command->info('Roles seeded: ' . count($roles));
     }
 }

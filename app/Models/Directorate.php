@@ -5,12 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Directorate extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
         'name',
         'code',
@@ -22,13 +19,13 @@ class Directorate extends Model
         'is_active' => 'boolean',
     ];
 
-    public function head(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'head_user_id');
-    }
-
     public function departments(): HasMany
     {
         return $this->hasMany(Department::class);
+    }
+
+    public function head(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'head_user_id');
     }
 }

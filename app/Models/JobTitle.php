@@ -6,28 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Department extends Model
+class JobTitle extends Model
 {
     protected $fillable = [
+        'role_id',
         'name',
-        'code',
-        'directorate_id',
-        'head_user_id',
+        'is_default',
         'is_active',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_default' => 'boolean',
+        'is_active'  => 'boolean',
     ];
 
-    public function directorate(): BelongsTo
+    public function role(): BelongsTo
     {
-        return $this->belongsTo(Directorate::class);
-    }
-
-    public function head(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'head_user_id');
+        return $this->belongsTo(Role::class);
     }
 
     public function users(): HasMany

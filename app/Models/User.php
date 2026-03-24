@@ -26,12 +26,17 @@ class User extends Authenticatable
         'date_of_birth',
         'date_of_appointment',
         'role_id',
+        'job_title_id',
         'department_id',
         'supervisor_id',
+        'attached_to_id',
+        'is_superadmin',
+        'is_hr_admin',
         'max_days_per_year',
         'days_used_this_year',
         'docket_year',
         'status',
+        'force_password_change',
         'profile_photo',
         'last_login_at',
         'last_login_ip',
@@ -43,23 +48,31 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'email_verified_at'    => 'datetime',
-        'last_login_at'        => 'datetime',
-        'date_of_birth'        => 'date',
-        'date_of_appointment'  => 'date',
-        'max_days_per_year'    => 'integer',
-        'days_used_this_year'  => 'integer',
-        'docket_year'          => 'integer',
-        'password'             => 'hashed',
+        'email_verified_at'     => 'datetime',
+        'last_login_at'         => 'datetime',
+        'date_of_birth'         => 'date',
+        'date_of_appointment'   => 'date',
+        'max_days_per_year'     => 'integer',
+        'days_used_this_year'   => 'integer',
+        'docket_year'           => 'integer',
+        'is_superadmin'         => 'boolean',
+        'is_hr_admin'           => 'boolean',
+        'force_password_change' => 'boolean',
+        'password'              => 'hashed',
     ];
 
-    // -------------------------------------------------------------------------
+    // =========================================================
     // Relationships
-    // -------------------------------------------------------------------------
+    // =========================================================
 
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function jobTitle(): BelongsTo
+    {
+        return $this->belongsTo(JobTitle::class);
     }
 
     public function department(): BelongsTo
@@ -75,6 +88,16 @@ class User extends Authenticatable
     public function subordinates(): HasMany
     {
         return $this->hasMany(User::class, 'supervisor_id');
+    }
+
+    public function attachedTo(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'attached_to_id');
+    }
+
+    public function attachedStaff(): HasMany
+    {
+        return $this->hasMany(User::class, 'attached_to_id');
     }
 
     public function otps(): HasMany
@@ -97,28 +120,28 @@ class User extends Authenticatable
         return $this->hasMany(SupervisorFeedback::class, 'supervisor_id');
     }
 
-    // -------------------------------------------------------------------------
-    // Role helper methods — use these everywhere instead of checking role_id
-    // -------------------------------------------------------------------------
+    // =========================================================
+    // Permission helpers
+    // =========================================================
 
     public function isSuperAdmin(): bool
     {
-        return $this->role?->name === 'superadmin';
+        return $this->is_superadmin || $this->role?->is_ps;
     }
 
     public function isPS(): bool
     {
-        return $this->role?->is_ps === true;
+        return (bool) $this->role?->is_ps;
     }
 
     public function isHR(): bool
     {
-        return $this->role?->name === 'hr';
+        return $this->is_hr_admin || $this->role?->is_ps || $this->is_superadmin;
     }
 
     public function isSupervisor(): bool
     {
-        return $this->subordinates()->exists();
+        return $this->role?->can_supervise && $this->subordinates()->exists();
     }
 
     public function canManageUsers(): bool
@@ -146,22 +169,119 @@ class User extends Authenticatable
         return $this->isSuperAdmin() || $this->isPS() || $this->isHR();
     }
 
-    // -------------------------------------------------------------------------
+    public function hierarchyLevel(): int
+    {
+        return $this->role?->hierarchy_level ?? 99;
+    }
+
+    // =========================================================
+    // Notification logic
+    // =========================================================
+
+    /**
+     * Who concurs this person's foreign official travel.
+     * Always the direct supervisor.
+     */
+    public function getConcurrer(): ?self
+    {
+        return $this->supervisor;
+    }
+
+    /**
+     * Who gets notified when this person submits a travel application.
+     * Rules based on applicant's hierarchy level.
+     */
+    public function getNotifyList(): \Illuminate\Support\Collection
+    {
+        $level  = $this->hierarchyLevel();
+        $deptId = $this->department_id;
+
+        // PS — no one above
+        if ($level === 1) {
+            return collect();
+        }
+
+        // Secretary (2) — notify PS
+        if ($level === 2) {
+            return User::whereHas('role', fn($q) => $q->where('is_ps', true))
+                ->where('status', 'active')
+                ->get();
+        }
+
+        // Director (4), Assistant Secretary (3) — notify Secretary of their directorate
+        if (in_array($level, [3, 4])) {
+            return $this->getPeopleInDirectorateAtLevels([2]);
+        }
+
+        // Deputy Director (5) — notify Director in same division
+        if ($level === 5) {
+            return $this->getPeopleInDepartmentAtLevels([4]);
+        }
+
+        // Assistant Director (6) — notify DD + Director in same division
+        if ($level === 6) {
+            return $this->getPeopleInDepartmentAtLevels([4, 5]);
+        }
+
+        // Principal Officer (7), Senior Officer (8), Officer (9)
+        // notify all AD + DD + Director in same division
+        if ($level >= 7) {
+            return $this->getPeopleInDepartmentAtLevels([4, 5, 6]);
+        }
+
+        return collect();
+    }
+
+    /**
+     * Get users in the same division at specific hierarchy levels.
+     */
+    private function getPeopleInDepartmentAtLevels(array $levels): \Illuminate\Support\Collection
+    {
+        if (! $this->department_id) return collect();
+
+        return User::where('department_id', $this->department_id)
+            ->where('id', '!=', $this->id)
+            ->where('status', 'active')
+            ->whereHas('role', fn($q) => $q->whereIn('hierarchy_level', $levels))
+            ->get();
+    }
+
+    /**
+     * Get users in the same directorate at specific hierarchy levels.
+     */
+    private function getPeopleInDirectorateAtLevels(array $levels): \Illuminate\Support\Collection
+    {
+        $directorateId = $this->department?->directorate_id;
+        if (! $directorateId) return collect();
+
+        return User::whereHas('department', fn($q) =>
+                $q->where('directorate_id', $directorateId)
+            )
+            ->where('id', '!=', $this->id)
+            ->where('status', 'active')
+            ->whereHas('role', fn($q) => $q->whereIn('hierarchy_level', $levels))
+            ->get();
+    }
+
+    // =========================================================
     // Computed attributes
-    // -------------------------------------------------------------------------
+    // =========================================================
 
     public function getFullNameAttribute(): string
     {
         return trim($this->first_name . ' ' . $this->last_name);
     }
 
+    public function getDisplayTitleAttribute(): string
+    {
+        return $this->jobTitle?->name ?? $this->role?->label ?? '';
+    }
+
     public function getDaysRemainingAttribute(): int
     {
-        // Reset docket if it's a new year
         if ($this->docket_year !== now()->year) {
             return $this->max_days_per_year;
         }
-
         return max(0, $this->max_days_per_year - $this->days_used_this_year);
     }
 
@@ -170,14 +290,31 @@ class User extends Authenticatable
         return $this->status === 'active';
     }
 
-    // -------------------------------------------------------------------------
-    // Post-trip gate — blocks new applications if prior trip has no uploads
-    // -------------------------------------------------------------------------
-
     public function hasPendingPostTripUploads(): bool
     {
         return $this->travelApplications()
             ->where('status', 'pending_uploads')
             ->exists();
+    }
+
+    // =========================================================
+    // Query scopes
+    // =========================================================
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function scopeAtLevels($query, array $levels)
+    {
+        return $query->whereHas('role', fn($q) =>
+            $q->whereIn('hierarchy_level', $levels)
+        );
+    }
+
+    public function scopeInDepartment($query, int $deptId)
+    {
+        return $query->where('department_id', $deptId);
     }
 }

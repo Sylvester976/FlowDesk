@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             SuperAdminSeeder::class,
             CountriesSeeder::class,
             CountiesSeeder::class,
+            OrgStructureSeeder::class,
         ]);
     }
 }
