@@ -9,6 +9,12 @@ use App\Livewire\Admin\RolesManager;
 use App\Livewire\Admin\OrgStructureManager;
 use App\Livewire\Admin\EditStaff;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Travel\TravelWizard;
+use App\Livewire\Travel\MyApplications;
+use App\Livewire\Travel\ApplicationDetail;
+use App\Http\Controllers\DocumentController;
+use App\Livewire\AllNotifications;
+
 
 
 // ============================================================
@@ -67,11 +73,17 @@ Route::middleware(['auth'])->group(function () {
     // Travel applications
     // --------------------------------------------------------
     Route::prefix('travel')->name('travel.')->group(function () {
-        Route::get('/',            fn() => view('travel.index'))->name('index');
-        Route::get('/apply',       fn() => view('travel.create'))->name('create');
+        Route::get('/',            MyApplications::class)->name('index');
+        Route::get('/apply',       TravelWizard::class)->name('create');
         Route::get('/rates',       fn() => view('travel.rates'))->name('rates');
         Route::get('/post-trip',   fn() => view('travel.post-trip'))->name('post-trip');
         Route::get('/concurrence', fn() => view('travel.concurrence'))->name('concurrence');
+
+        // ↓ Add these two
+        Route::get('/document/{document}', [DocumentController::class, 'show'])->name('document');
+        Route::get('/clearance/{application}', fn() => abort(404))->name('clearance'); // placeholder
+
+        Route::get('/{application}', ApplicationDetail::class)->name('show');
     });
 
     // --------------------------------------------------------
@@ -96,4 +108,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/roles', RolesManager::class)->name('roles.index');
     });
 
+    // --------------------------------------------------------
+    // Notifications
+    // --------------------------------------------------------
+    Route::get('/notifications', AllNotifications::class)->name('notifications.index');
 });

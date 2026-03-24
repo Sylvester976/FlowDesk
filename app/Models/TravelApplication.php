@@ -13,42 +13,32 @@ class TravelApplication extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'reference_number',
         'user_id',
         'travel_type',
         'country_id',
         'county_id',
-        'city',
-        'county',
-        'subcounty',
-        'purpose_type',
-        'justification',
-        'start_date',
-        'end_date',
-        'days_requested',
-        'delegation_size',
-        'sponsor',
-        'total_cost_usd',
+        'destination_details',
+        'departure_date',
+        'return_date',
+        'per_diem_days',
+        'funding_source',
+        'purpose',
+        'leave_approved',
         'status',
-        'auto_approved_at',
-        'days_used_before',
-        'days_used_after',
+        'reference_number',
+        'clearance_letter_path',
+        'clearance_letter_generated_at',
     ];
 
     protected $casts = [
-        'start_date'       => 'date',
-        'end_date'         => 'date',
-        'auto_approved_at' => 'datetime',
-        'days_requested'   => 'integer',
-        'delegation_size'  => 'integer',
-        'total_cost_usd'   => 'decimal:2',
-        'days_used_before' => 'integer',
-        'days_used_after'  => 'integer',
+        'departure_date'               => 'date',
+        'return_date'                  => 'date',
+        'leave_approved'               => 'boolean',
+        'clearance_letter_generated_at'=> 'datetime',
+        'per_diem_days'               => 'integer',
     ];
 
-    // -------------------------------------------------------------------------
-    // Relationships
-    // -------------------------------------------------------------------------
+    // ── Relationships ─────────────────────────────────────────
 
     public function user(): BelongsTo
     {
@@ -67,33 +57,25 @@ class TravelApplication extends Model
 
     public function documents(): HasMany
     {
-        return $this->hasMany(ApplicationDocument::class, 'application_id');
+        return $this->hasMany(ApplicationDocument::class);
     }
 
     public function concurrenceSteps(): HasMany
     {
-        return $this->hasMany(ConcurrenceStep::class, 'application_id');
-    }
-
-    public function supervisorFeedback(): HasMany
-    {
-        return $this->hasMany(SupervisorFeedback::class, 'application_id');
-    }
-
-    public function postTripUpload(): HasOne
-    {
-        return $this->hasOne(PostTripUpload::class, 'application_id');
+        return $this->hasMany(ConcurrenceStep::class);
     }
 
     public function logs(): HasMany
     {
-        return $this->hasMany(ApplicationLog::class, 'application_id')
-            ->orderBy('created_at', 'asc');
+        return $this->hasMany(ApplicationLog::class);
     }
 
-    // -------------------------------------------------------------------------
-    // Status helpers
-    // -------------------------------------------------------------------------
+    public function postTripUpload(): HasOne
+    {
+        return $this->hasOne(PostTripUpload::class);
+    }
+
+    // ── Helpers ───────────────────────────────────────────────
 
     public function isForeignOfficial(): bool
     {
@@ -110,68 +92,94 @@ class TravelApplication extends Model
         return $this->travel_type === 'local';
     }
 
-    public function isPendingConcurrence(): bool
+    public function isForeign(): bool
+    {
+        return in_array($this->travel_type, ['foreign_official', 'foreign_private']);
+    }
+
+    public function isPending(): bool
+    {
+        return in_array($this->status, ['submitted', 'pending_concurrence']);
+    }
+
+    public function isActionable(): bool
     {
         return $this->status === 'pending_concurrence';
     }
 
-    public function isConcurred(): bool
+    public function getTravelTypeLabel(): string
     {
-        return $this->status === 'concurred';
+        return match($this->travel_type) {
+            'foreign_official' => 'Foreign Official',
+            'foreign_private'  => 'Foreign Private',
+            'local'            => 'Local',
+            default            => 'Unknown',
+        };
     }
 
-    public function isApproved(): bool
+    public function getStatusLabel(): string
     {
-        return in_array($this->status, ['concurred', 'approved']);
+        return match($this->status) {
+            'draft'               => 'Draft',
+            'submitted'           => 'Submitted',
+            'pending_concurrence' => 'Awaiting Concurrence',
+            'concurred'           => 'Concurred',
+            'not_concurred'       => 'Not Concurred',
+            'returned'            => 'Returned',
+            'cancelled'           => 'Cancelled',
+            'pending_uploads'     => 'Post-trip Pending',
+            'closed'              => 'Closed',
+            default               => ucfirst($this->status),
+        };
     }
 
-    public function isPendingUploads(): bool
+    public function getStatusColor(): string
     {
-        return $this->status === 'pending_uploads';
+        return match($this->status) {
+            'draft'               => 'secondary',
+            'submitted'           => 'info',
+            'pending_concurrence' => 'warning',
+            'concurred'           => 'success',
+            'not_concurred'       => 'danger',
+            'returned'            => 'warning',
+            'cancelled'           => 'secondary',
+            'pending_uploads'     => 'warning',
+            'closed'              => 'success',
+            default               => 'secondary',
+        };
     }
 
-    public function isClosed(): bool
+    public function getDurationDays(): int
     {
-        return $this->status === 'closed';
+        return $this->departure_date->diffInDays($this->return_date) + 1;
     }
 
-    public function requiresConcurrence(): bool
+    // ── Audit log helper ──────────────────────────────────────
+
+    public function log(string $action, string $description, ?array $meta = null): void
     {
-        return $this->travel_type === 'foreign_official';
+        $this->logs()->create([
+            'user_id'     => auth()->id(),
+            'action'      => $action,
+            'description' => $description,
+            'meta'        => $meta,
+        ]);
     }
 
-    // -------------------------------------------------------------------------
-    // Reference number generator
-    // -------------------------------------------------------------------------
+    // ── Reference number generator ────────────────────────────
 
-    public static function generateReference(): string
+    public static function generateReference(string $type): string
     {
-        $year  = now()->year;
+        $prefix = match($type) {
+            'foreign_official' => 'FO',
+            'foreign_private'  => 'FP',
+            'local'            => 'LC',
+            default            => 'TR',
+        };
+
+        $year  = now()->format('Y');
         $count = static::whereYear('created_at', $year)->count() + 1;
 
-        return sprintf('TRV-%s-%05d', $year, $count);
-    }
-
-    // -------------------------------------------------------------------------
-    // Required documents per travel type
-    // -------------------------------------------------------------------------
-
-    public static function requiredDocuments(string $travelType): array
-    {
-        return match ($travelType) {
-            'foreign_official' => [
-                'invitation_letter',
-                'program',
-                'accountant_letter',
-                'procurement_letter',
-            ],
-            'foreign_private' => [
-                'leave_approval',
-            ],
-            'local' => [
-                'assignment_brief',
-            ],
-            default => [],
-        };
+        return "{$prefix}-{$year}-" . str_pad($count, 4, '0', STR_PAD_LEFT);
     }
 }

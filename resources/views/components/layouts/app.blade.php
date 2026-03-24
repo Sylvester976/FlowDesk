@@ -233,40 +233,7 @@
             <div class="header-divider"></div>
 
             {{-- Notifications --}}
-            <div class="header-action dropdown notification-dropdown">
-                <button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
-                    <i class="bi bi-bell"></i>
-                    @if(auth()->user()->hasPendingPostTripUploads())
-                        <span class="badge">1</span>
-                    @endif
-                </button>
-                <div class="dropdown-menu dropdown-menu-end">
-                    <div class="notification-header">
-                        <h6>Notifications</h6>
-                    </div>
-                    <div class="notification-list">
-                        @if(auth()->user()->hasPendingPostTripUploads())
-                            <a href="{{ route('travel.post-trip') }}" class="notification-item unread d-block text-decoration-none">
-                                <div class="notification-icon warning">
-                                    <i class="bi bi-upload"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-title">Post-trip upload pending</div>
-                                    <div class="notification-text">Upload documents before your next application</div>
-                                    <div class="notification-time"><i class="bi bi-clock"></i> Action required</div>
-                                </div>
-                            </a>
-                        @else
-                            <div class="p-3 text-center text-muted small">
-                                <i class="bi bi-check-circle me-1 text-success"></i> All caught up
-                            </div>
-                        @endif
-                    </div>
-                    <div class="notification-footer">
-                        <a href="#">View all notifications</a>
-                    </div>
-                </div>
-            </div>
+            @livewire('notification-bell')
 
             {{-- User dropdown --}}
             <div class="header-action dropdown user-dropdown">
@@ -349,10 +316,10 @@
         </button>
 
         {{-- Notifications --}}
-        <a href="#" class="mobile-menu-item">
+        <a href="{{ route('notifications.index') }}" class="mobile-menu-item">
             <i class="bi bi-bell"></i>
-            @if(auth()->user()->hasPendingPostTripUploads())
-                <span class="badge">1</span>
+            @if(auth()->user()->unreadNotifications()->count() > 0)
+                <span class="badge">{{ auth()->user()->unreadNotifications()->count() }}</span>
             @endif
             <span class="mobile-menu-label">Notifications</span>
         </a>

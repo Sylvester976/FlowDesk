@@ -4,39 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ApplicationDocument extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
-        'application_id',
-        'uploaded_by',
-        'doc_type',
-        'original_name',
+        'travel_application_id',
+        'document_type',
         'file_path',
+        'original_name',
         'mime_type',
         'file_size',
-    ];
-
-    protected $casts = [
-        'file_size' => 'integer',
-    ];
-
-    public static array $docTypeLabels = [
-        'invitation_letter'  => 'Invitation Letter',
-        'program'            => 'Program / Agenda',
-        'accountant_letter'  => 'Accountant Letter',
-        'procurement_letter' => 'Procurement Letter',
-        'delegate_list'      => 'Delegate List',
-        'leave_approval'     => 'Leave Approval',
-        'assignment_brief'   => 'Assignment Brief',
+        'uploaded_by',
     ];
 
     public function application(): BelongsTo
     {
-        return $this->belongsTo(TravelApplication::class, 'application_id');
+        return $this->belongsTo(TravelApplication::class, 'travel_application_id');
     }
 
     public function uploader(): BelongsTo
@@ -44,18 +27,18 @@ class ApplicationDocument extends Model
         return $this->belongsTo(User::class, 'uploaded_by');
     }
 
-    public function getLabelAttribute(): string
+    public function getTypeLabel(): string
     {
-        return self::$docTypeLabels[$this->doc_type] ?? ucfirst($this->doc_type);
-    }
-
-    public function getFileSizeFormattedAttribute(): string
-    {
-        $size = $this->file_size ?? 0;
-
-        if ($size < 1024) return $size . ' B';
-        if ($size < 1048576) return round($size / 1024, 1) . ' KB';
-
-        return round($size / 1048576, 1) . ' MB';
+        return match($this->document_type) {
+            'invitation_letter'   => 'Invitation / Request Letter',
+            'appointment_letter'  => 'Appointment Letter',
+            'passport_copy'       => 'Passport Copy',
+            'leave_form'          => 'Leave Form',
+            'post_trip_report'    => 'Post-Trip Report',
+            'post_trip_ticket'    => 'Travel Ticket',
+            'post_trip_passport'  => 'Passport (Stamped)',
+            'other'               => 'Other Document',
+            default               => ucfirst(str_replace('_', ' ', $this->document_type)),
+        };
     }
 }

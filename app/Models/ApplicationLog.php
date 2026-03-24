@@ -7,59 +7,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicationLog extends Model
 {
-    // Immutable — no updates ever
-    public $timestamps = false;
-
     protected $fillable = [
-        'application_id',
-        'actor_id',
-        'actor_label',
-        'event',
-        'from_status',
-        'to_status',
-        'payload',
-        'ip_address',
-        'user_agent',
-        'created_at',
+        'travel_application_id',
+        'user_id',
+        'action',
+        'description',
+        'meta',
     ];
 
     protected $casts = [
-        'payload'    => 'array',
-        'created_at' => 'datetime',
+        'meta' => 'array',
     ];
 
     public function application(): BelongsTo
     {
-        return $this->belongsTo(TravelApplication::class, 'application_id');
+        return $this->belongsTo(TravelApplication::class, 'travel_application_id');
     }
 
-    public function actor(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'actor_id');
-    }
-
-    // Static helper — call this everywhere instead of creating manually
-    public static function record(
-        int $applicationId,
-        string $event,
-        ?int $actorId = null,
-        ?string $actorLabel = null,
-        ?string $fromStatus = null,
-        ?string $toStatus = null,
-        array $payload = [],
-        ?string $ip = null,
-    ): self {
-        return static::create([
-            'application_id' => $applicationId,
-            'actor_id'       => $actorId,
-            'actor_label'    => $actorLabel,
-            'event'          => $event,
-            'from_status'    => $fromStatus,
-            'to_status'      => $toStatus,
-            'payload'        => $payload ?: null,
-            'ip_address'     => $ip ?? request()?->ip(),
-            'user_agent'     => request()?->userAgent(),
-            'created_at'     => now(),
-        ]);
+        return $this->belongsTo(User::class);
     }
 }

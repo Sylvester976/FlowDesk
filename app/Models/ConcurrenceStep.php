@@ -8,32 +8,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ConcurrenceStep extends Model
 {
     protected $fillable = [
-        'application_id',
+        'travel_application_id',
         'approver_id',
-        'decision',
+        'action',
         'comments',
-        'is_system',
-        'system_reason',
-        'decided_at',
-        'decided_ip',
+        'acted_at',
     ];
 
     protected $casts = [
-        'decided_at' => 'datetime',
-        'is_system'  => 'boolean',
-    ];
-
-    public static array $decisionLabels = [
-        'concurred'      => 'Concurred',
-        'not_concurred'  => 'Not Concurred',
-        'returned'       => 'Returned for Correction',
-        'auto_concurred' => 'Auto-Concurred (System)',
-        'pending'        => 'Pending',
+        'acted_at' => 'datetime',
     ];
 
     public function application(): BelongsTo
     {
-        return $this->belongsTo(TravelApplication::class, 'application_id');
+        return $this->belongsTo(TravelApplication::class, 'travel_application_id');
     }
 
     public function approver(): BelongsTo
@@ -41,18 +29,8 @@ class ConcurrenceStep extends Model
         return $this->belongsTo(User::class, 'approver_id');
     }
 
-    public function getDecisionLabelAttribute(): string
-    {
-        return self::$decisionLabels[$this->decision] ?? $this->decision;
-    }
-
     public function isPending(): bool
     {
-        return $this->decision === 'pending';
-    }
-
-    public function isConcurred(): bool
-    {
-        return in_array($this->decision, ['concurred', 'auto_concurred']);
+        return $this->action === 'pending';
     }
 }

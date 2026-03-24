@@ -230,40 +230,32 @@
             <div class="header-divider"></div>
 
             
-            <div class="header-action dropdown notification-dropdown">
-                <button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
-                    <i class="bi bi-bell"></i>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->hasPendingPostTripUploads()): ?>
-                        <span class="badge">1</span>
-                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end">
-                    <div class="notification-header">
-                        <h6>Notifications</h6>
-                    </div>
-                    <div class="notification-list">
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->hasPendingPostTripUploads()): ?>
-                            <a href="<?php echo e(route('travel.post-trip')); ?>" class="notification-item unread d-block text-decoration-none">
-                                <div class="notification-icon warning">
-                                    <i class="bi bi-upload"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-title">Post-trip upload pending</div>
-                                    <div class="notification-text">Upload documents before your next application</div>
-                                    <div class="notification-time"><i class="bi bi-clock"></i> Action required</div>
-                                </div>
-                            </a>
-                        <?php else: ?>
-                            <div class="p-3 text-center text-muted small">
-                                <i class="bi bi-check-circle me-1 text-success"></i> All caught up
-                            </div>
-                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                    </div>
-                    <div class="notification-footer">
-                        <a href="#">View all notifications</a>
-                    </div>
-                </div>
-            </div>
+            <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('notification-bell');
+
+$__keyOuter = $__key ?? null;
+
+$__key = null;
+$__componentSlots = [];
+
+$__key ??= \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::generateKey('lw-3238548952-0', $__key);
+
+$__html = app('livewire')->mount($__name, $__params, $__key, $__componentSlots);
+
+echo $__html;
+
+unset($__html);
+unset($__key);
+$__key = $__keyOuter;
+unset($__keyOuter);
+unset($__name);
+unset($__params);
+unset($__componentSlots);
+unset($__split);
+?>
 
             
             <div class="header-action dropdown user-dropdown">
@@ -348,10 +340,10 @@
         </button>
 
         
-        <a href="#" class="mobile-menu-item">
+        <a href="<?php echo e(route('notifications.index')); ?>" class="mobile-menu-item">
             <i class="bi bi-bell"></i>
-            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->hasPendingPostTripUploads()): ?>
-                <span class="badge">1</span>
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->unreadNotifications()->count() > 0): ?>
+                <span class="badge"><?php echo e(auth()->user()->unreadNotifications()->count()); ?></span>
             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             <span class="mobile-menu-label">Notifications</span>
         </a>
