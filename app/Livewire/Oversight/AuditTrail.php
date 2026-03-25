@@ -28,7 +28,7 @@ class AuditTrail extends Component
     {
         if ($this->tab === 'applications') {
             $logs = ApplicationLog::query()
-                ->with(['user', 'travelApplication'])
+                ->with(['user', 'application'])
                 ->when($this->search, fn($q) =>
                     $q->where('action', 'ilike', "%{$this->search}%")
                       ->orWhere('description', 'ilike', "%{$this->search}%")
