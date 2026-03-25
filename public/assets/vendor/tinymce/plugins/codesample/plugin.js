@@ -2239,7 +2239,7 @@
     				inside: createInterpolationInside(mInterpolation, mInterpolationRound),
     			},
     			{
-    				pattern: re(/(^|[^@\\])\$"(?:\\.|\{\{|<<0>>|[^\\"{])*"/.source, [sInterpolation]),
+    				pattern: re(/(^|[^@\\])\$"(?:\\.|\\{\\{|<<0>>|[^"\\{]+)*"/.source, [sInterpolation]),
     				lookbehind: true,
     				greedy: true,
     				inside: createInterpolationInside(sInterpolation, sInterpolationRound),
