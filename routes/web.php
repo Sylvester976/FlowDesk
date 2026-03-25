@@ -22,6 +22,9 @@ use App\Livewire\Dashboard\StaffDashboard;
 use App\Livewire\Dashboard\SupervisorDashboard;
 use App\Livewire\Dashboard\HRDashboard;
 use App\Livewire\Dashboard\PSDashboard;
+use App\Livewire\Oversight\AllApplications;
+use App\Livewire\Oversight\OutOfOffice;
+use App\Livewire\Oversight\DaysDocket;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ClearanceLetterController;
 use Illuminate\Support\Facades\Route;
@@ -93,12 +96,12 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // --------------------------------------------------------
-    // Oversight — Phase 6 (built next)
+    // Oversight (PS / HR / Superadmin)
     // --------------------------------------------------------
     Route::prefix('oversight')->name('oversight.')->group(function () {
-        Route::get('/applications',  fn() => abort(404))->name('all-applications');
-        Route::get('/out-of-office', fn() => abort(404))->name('out-of-office');
-        Route::get('/docket',        fn() => abort(404))->name('docket');
+        Route::get('/applications',  AllApplications::class)->name('all-applications');
+        Route::get('/out-of-office', OutOfOffice::class)->name('out-of-office');
+        Route::get('/docket',        DaysDocket::class)->name('docket');
     });
 
     // --------------------------------------------------------
