@@ -15,7 +15,13 @@
                 <span class="breadcrumb-item active"><?php echo e($app->reference_number); ?></span>
             </nav>
         </div>
-        <div class="page-header-actions">
+        <div class="page-header-actions d-flex gap-2">
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($app->status === 'returned' && $app->user_id === auth()->id()): ?>
+            <a href="<?php echo e(route('travel.edit', $app->id)); ?>" class="btn btn-sm btn-warning">
+                <i class="bi bi-pencil me-1"></i>
+                <span class="d-none d-sm-inline">Revise &amp; Resubmit</span>
+            </a>
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             <a href="<?php echo e(route('travel.index')); ?>" class="btn btn-sm btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i> Back
             </a>
@@ -71,6 +77,41 @@
     </div>
 
     <div class="row g-3">
+
+        
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($app->status === 'returned' && $app->user_id === auth()->id()): ?>
+        <?php $returnStep = $app->concurrenceSteps->where('action', 'returned')->sortByDesc('acted_at')->first(); ?>
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($returnStep): ?>
+        <div class="col-12">
+            <div class="card border-0" style="background:#fff8e1;border-left:4px solid #c8a951 !important;">
+                <div class="card-body py-3">
+                    <div class="d-flex align-items-start gap-3 flex-wrap">
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold mb-1" style="color:#78620a;font-size:.88rem;">
+                                <i class="bi bi-arrow-return-left me-1"></i>
+                                Returned by <?php echo e($returnStep->approver->full_name); ?>
+
+                                (<?php echo e($returnStep->approver->role?->label); ?>)
+                                on <?php echo e($returnStep->acted_at?->format('d M Y, H:i')); ?>
+
+                            </div>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($returnStep->comments): ?>
+                            <div style="font-size:.84rem;color:#78620a;">
+                                <strong>Comments:</strong> <?php echo e($returnStep->comments); ?>
+
+                            </div>
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </div>
+                        <a href="<?php echo e(route('travel.edit', $app->id)); ?>"
+                            class="btn btn-sm btn-warning flex-shrink-0">
+                            <i class="bi bi-pencil me-1"></i> Revise &amp; Resubmit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
         
         <div class="col-12 col-lg-8">

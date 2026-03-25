@@ -14,6 +14,9 @@ use App\Livewire\Travel\MyApplications;
 use App\Livewire\Travel\ApplicationDetail;
 use App\Http\Controllers\DocumentController;
 use App\Livewire\AllNotifications;
+use App\Livewire\Travel\ConcurrenceQueue;
+use App\Livewire\Travel\EditApplication;
+use App\Http\Controllers\ClearanceLetterController;
 
 
 
@@ -77,13 +80,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/apply',       TravelWizard::class)->name('create');
         Route::get('/rates',       fn() => view('travel.rates'))->name('rates');
         Route::get('/post-trip',   fn() => view('travel.post-trip'))->name('post-trip');
-        Route::get('/concurrence', fn() => view('travel.concurrence'))->name('concurrence');
-
-        // ↓ Add these two
-        Route::get('/document/{document}', [DocumentController::class, 'show'])->name('document');
-        Route::get('/clearance/{application}', fn() => abort(404))->name('clearance'); // placeholder
-
-        Route::get('/{application}', ApplicationDetail::class)->name('show');
+        Route::get('/concurrence', ConcurrenceQueue::class)->name('concurrence');
+        Route::get('/document/{document}',       [DocumentController::class, 'show'])->name('document');
+        Route::get('/clearance/{application}',   [ClearanceLetterController::class, 'show'])->name('clearance');
+        Route::get('/{application}/edit',        EditApplication::class)->name('edit');
+        Route::get('/{application}',             ApplicationDetail::class)->name('show');
     });
 
     // --------------------------------------------------------

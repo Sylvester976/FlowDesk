@@ -15,7 +15,13 @@
                 <span class="breadcrumb-item active">{{ $app->reference_number }}</span>
             </nav>
         </div>
-        <div class="page-header-actions">
+        <div class="page-header-actions d-flex gap-2">
+            @if($app->status === 'returned' && $app->user_id === auth()->id())
+            <a href="{{ route('travel.edit', $app->id) }}" class="btn btn-sm btn-warning">
+                <i class="bi bi-pencil me-1"></i>
+                <span class="d-none d-sm-inline">Revise &amp; Resubmit</span>
+            </a>
+            @endif
             <a href="{{ route('travel.index') }}" class="btn btn-sm btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i> Back
             </a>
@@ -67,6 +73,38 @@
     </div>
 
     <div class="row g-3">
+
+        {{-- Returned banner — prominent for applicant --}}
+        @if($app->status === 'returned' && $app->user_id === auth()->id())
+        @php $returnStep = $app->concurrenceSteps->where('action', 'returned')->sortByDesc('acted_at')->first(); @endphp
+        @if($returnStep)
+        <div class="col-12">
+            <div class="card border-0" style="background:#fff8e1;border-left:4px solid #c8a951 !important;">
+                <div class="card-body py-3">
+                    <div class="d-flex align-items-start gap-3 flex-wrap">
+                        <div class="flex-grow-1">
+                            <div class="fw-semibold mb-1" style="color:#78620a;font-size:.88rem;">
+                                <i class="bi bi-arrow-return-left me-1"></i>
+                                Returned by {{ $returnStep->approver->full_name }}
+                                ({{ $returnStep->approver->role?->label }})
+                                on {{ $returnStep->acted_at?->format('d M Y, H:i') }}
+                            </div>
+                            @if($returnStep->comments)
+                            <div style="font-size:.84rem;color:#78620a;">
+                                <strong>Comments:</strong> {{ $returnStep->comments }}
+                            </div>
+                            @endif
+                        </div>
+                        <a href="{{ route('travel.edit', $app->id) }}"
+                            class="btn btn-sm btn-warning flex-shrink-0">
+                            <i class="bi bi-pencil me-1"></i> Revise &amp; Resubmit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+        @endif
 
         {{-- ── LEFT COLUMN ────────────────────────────────── --}}
         <div class="col-12 col-lg-8">
