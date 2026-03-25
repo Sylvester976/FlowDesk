@@ -575,6 +575,10 @@ unset($__split);
                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     <li><a class="panel-link <?php echo e(request()->routeIs('oversight.out-of-office') ? 'active' : ''); ?>"
                            href="<?php echo e(route('oversight.out-of-office')); ?>">Out of Office</a></li>
+                    <li><a class="panel-link <?php echo e(request()->routeIs('oversight.audit') ? 'active' : ''); ?>"
+                           href="<?php echo e(route('oversight.audit')); ?>">Audit Trail</a></li>
+                    <li><a class="panel-link <?php echo e(request()->routeIs('oversight.reports') ? 'active' : ''); ?>"
+                           href="<?php echo e(route('oversight.reports')); ?>">Reports &amp; Exports</a></li>
                 </ul>
             </div>
         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>

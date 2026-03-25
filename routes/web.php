@@ -28,6 +28,9 @@ use App\Livewire\Oversight\DaysDocket;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ClearanceLetterController;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Oversight\AuditTrail;
+use App\Livewire\Oversight\Reports;
+use App\Http\Controllers\ReportsController;
 
 // ============================================================
 // Guest routes
@@ -102,6 +105,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/applications',  AllApplications::class)->name('all-applications');
         Route::get('/out-of-office', OutOfOffice::class)->name('out-of-office');
         Route::get('/docket',        DaysDocket::class)->name('docket');
+        Route::get('/audit',    AuditTrail::class)->name('audit');
+        Route::get('/reports',  Reports::class)->name('reports');
+    });
+    // --------------------------------------------------------
+    // Reports
+    // --------------------------------------------------------
+
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/applications', [ReportsController::class, 'applications'])->name('applications');
+        Route::get('/summary',      [ReportsController::class, 'summary'])->name('summary');
+        Route::get('/docket',       [ReportsController::class, 'docket'])->name('docket');
     });
 
     // --------------------------------------------------------

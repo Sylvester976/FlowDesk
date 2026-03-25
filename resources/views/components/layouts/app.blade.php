@@ -552,6 +552,10 @@
                     @endif
                     <li><a class="panel-link {{ request()->routeIs('oversight.out-of-office') ? 'active' : '' }}"
                            href="{{ route('oversight.out-of-office') }}">Out of Office</a></li>
+                    <li><a class="panel-link {{ request()->routeIs('oversight.audit') ? 'active' : '' }}"
+                           href="{{ route('oversight.audit') }}">Audit Trail</a></li>
+                    <li><a class="panel-link {{ request()->routeIs('oversight.reports') ? 'active' : '' }}"
+                           href="{{ route('oversight.reports') }}">Reports &amp; Exports</a></li>
                 </ul>
             </div>
         @endif
