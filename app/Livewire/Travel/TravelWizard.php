@@ -283,8 +283,9 @@ class TravelWizard extends Component
                     }
                 }
 
-                // Send notifications (non-blocking)
+                // Send notifications — email + in-app
                 $this->sendNotifications($app, $user);
+                \App\Services\NotificationService::applicationSubmitted($app);
             });
 
             session()->flash('notify_type', 'success');
