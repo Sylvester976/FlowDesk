@@ -8,38 +8,40 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TravelRate extends Model
 {
     protected $fillable = [
-        'country_id',
-        'role_id',
-        'daily_subsistence_usd',
-        'accommodation_usd',
-        'currency_code',
-        'effective_from',
-        'effective_to',
-        'notes',
+        'category',
+        'destination',
+        'rate_type',
+        'amount',
+        'currency',
+        'description',
+        'is_active',
+        'created_by',
+        'updated_by',
     ];
 
     protected $casts = [
-        'daily_subsistence_usd' => 'decimal:2',
-        'accommodation_usd'     => 'decimal:2',
-        'effective_from'        => 'date',
-        'effective_to'          => 'date',
+        'amount'    => 'decimal:2',
+        'is_active' => 'boolean',
     ];
 
-    public function country(): BelongsTo
+    public function createdBy(): BelongsTo
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function role(): BelongsTo
+    public function updatedBy(): BelongsTo
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
-    public function isActive(): bool
+    public function getTypeLabel(): string
     {
-        $today = now()->toDateString();
-
-        return $this->effective_from <= $today
-            && ($this->effective_to === null || $this->effective_to >= $today);
+        return match($this->rate_type) {
+            'per_diem'      => 'Per Diem',
+            'accommodation' => 'Accommodation',
+            'transport'     => 'Transport',
+            'incidental'    => 'Incidental',
+            default         => ucfirst($this->rate_type),
+        };
     }
 }

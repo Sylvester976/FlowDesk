@@ -3,27 +3,139 @@
 <head>
     <meta charset="utf-8">
     <style>
-        @page { margin: 2cm 2.5cm; }
-        body { font-family: 'DejaVu Sans', Arial, sans-serif; font-size: 11pt; color: #1a1a1a; line-height: 1.6; }
-        .letterhead { text-align: center; margin-bottom: 24px; border-bottom: 3px solid #1a3a6b; padding-bottom: 16px; }
-        .letterhead h1 { font-size: 13pt; font-weight: bold; color: #1a3a6b; margin: 4px 0; text-transform: uppercase; }
-        .letterhead p { font-size: 9.5pt; color: #555; margin: 2px 0; }
-        .flag-stripe { height: 5px; background: linear-gradient(to right, #bb0000 0 33.3%, #111 33.3% 66.6%, #006b3f 66.6% 100%); margin-bottom: 12px; }
-        .ref-date { display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 10.5pt; }
-        h2 { font-size: 12pt; text-align: center; text-decoration: underline; text-transform: uppercase; color: #1a3a6b; margin: 20px 0; }
-        .intro { margin-bottom: 16px; }
-        table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 10.5pt; }
-        th { background: #1a3a6b; color: #fff; padding: 7px 10px; text-align: left; font-weight: 600; }
-        td { padding: 7px 10px; border-bottom: 1px solid #ddd; }
-        tr:nth-child(even) td { background: #f5f7fb; }
-        .conditions { margin: 20px 0; }
-        .conditions h3 { font-size: 11pt; color: #1a3a6b; margin-bottom: 8px; }
-        .conditions ol { margin: 0; padding-left: 18px; font-size: 10.5pt; }
-        .conditions li { margin-bottom: 6px; }
-        .signature { margin-top: 48px; }
-        .signature-line { border-top: 1px solid #333; width: 220px; margin: 40px 0 4px; }
-        .official-stamp { text-align: center; margin: 20px 0; padding: 12px; border: 2px solid #1a3a6b; border-radius: 50%; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
-        .footer { margin-top: 32px; padding-top: 10px; border-top: 1px solid #ccc; font-size: 9pt; color: #777; text-align: center; }
+        @page {
+            margin: 2cm 2.5cm;
+        }
+
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-size: 11pt;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .letterhead {
+            text-align: center;
+            margin-bottom: 24px;
+            border-bottom: 3px solid #1a3a6b;
+            padding-bottom: 16px;
+        }
+
+        .letterhead h1 {
+            font-size: 13pt;
+            font-weight: bold;
+            color: #1a3a6b;
+            margin: 4px 0;
+            text-transform: uppercase;
+        }
+
+        .letterhead p {
+            font-size: 9.5pt;
+            color: #555;
+            margin: 2px 0;
+        }
+
+        .flag-stripe {
+            height: 5px;
+            background: linear-gradient(to right, #bb0000 0 33.3%, #111 33.3% 66.6%, #006b3f 66.6% 100%);
+            margin-bottom: 12px;
+        }
+
+        .ref-date {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 10.5pt;
+        }
+
+        h2 {
+            font-size: 12pt;
+            text-align: center;
+            text-decoration: underline;
+            text-transform: uppercase;
+            color: #1a3a6b;
+            margin: 20px 0;
+        }
+
+        .intro {
+            margin-bottom: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 10.5pt;
+        }
+
+        th {
+            background: #1a3a6b;
+            color: #fff;
+            padding: 7px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 7px 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) td {
+            background: #f5f7fb;
+        }
+
+        .conditions {
+            margin: 20px 0;
+        }
+
+        .conditions h3 {
+            font-size: 11pt;
+            color: #1a3a6b;
+            margin-bottom: 8px;
+        }
+
+        .conditions ol {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 10.5pt;
+        }
+
+        .conditions li {
+            margin-bottom: 6px;
+        }
+
+        .signature {
+            margin-top: 48px;
+        }
+
+        .signature-line {
+            border-top: 1px solid #333;
+            width: 220px;
+            margin: 40px 0 4px;
+        }
+
+        .official-stamp {
+            text-align: center;
+            margin: 20px 0;
+            padding: 12px;
+            border: 2px solid #1a3a6b;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer {
+            margin-top: 32px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 9pt;
+            color: #777;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -51,13 +163,13 @@
 
 <div class="intro">
     <p>This is to certify that <strong>{{ $user->full_name }}</strong>,
-    {{ $user->jobTitle?->name ?? $user->role?->label }},
-    @if($user->department)
-        {{ $user->department->name }},
-        {{ $user->department->directorate?->name }},
-    @endif
-    (PF No: {{ $user->pf_number ?? 'N/A' }}),
-    has been granted clearance to undertake official travel as detailed below:</p>
+        {{ $user->jobTitle?->name ?? $user->role?->label }},
+        @if($user->department)
+            {{ $user->department->name }},
+            {{ $user->department->directorate?->name }},
+        @endif
+        (PF No: {{ $user->pf_number ?? 'N/A' }}),
+        has been granted clearance to undertake official travel as detailed below:</p>
 </div>
 
 <table>
@@ -77,16 +189,18 @@
         <td>{{ $user->jobTitle?->name ?? $user->role?->label }}</td>
     </tr>
     @if($user->department)
-    <tr>
-        <td><strong>Division / Directorate</strong></td>
-        <td>{{ $user->department->name }}, {{ $user->department->directorate?->name }}</td>
-    </tr>
+        <tr>
+            <td><strong>Division / Directorate</strong></td>
+            <td>{{ $user->department->name }}, {{ $user->department->directorate?->name }}</td>
+        </tr>
     @endif
     <tr>
         <td><strong>Destination</strong></td>
         <td>
             {{ $app->country?->name ?? '' }}
-            @if($app->destination_details) — {{ $app->destination_details }} @endif
+            @if($app->destination_details)
+                — {{ $app->destination_details }}
+            @endif
         </td>
     </tr>
     <tr>
@@ -102,16 +216,16 @@
         <td>{{ $app->getDurationDays() }} day(s)</td>
     </tr>
     @if($app->per_diem_days)
-    <tr>
-        <td><strong>Per Diem Days</strong></td>
-        <td>{{ $app->per_diem_days }} day(s)</td>
-    </tr>
+        <tr>
+            <td><strong>Per Diem Days</strong></td>
+            <td>{{ $app->per_diem_days }} day(s)</td>
+        </tr>
     @endif
     @if($app->funding_source)
-    <tr>
-        <td><strong>Funding Source</strong></td>
-        <td>{{ $app->funding_source }}</td>
-    </tr>
+        <tr>
+            <td><strong>Funding Source</strong></td>
+            <td>{{ $app->funding_source }}</td>
+        </tr>
     @endif
     <tr>
         <td><strong>Purpose</strong></td>

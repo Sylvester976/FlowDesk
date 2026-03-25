@@ -124,24 +124,32 @@ class User extends Authenticatable
     // Permission helpers
     // =========================================================
 
+    /** ICT superadmin (is_superadmin flag) OR the PS role */
     public function isSuperAdmin(): bool
     {
-        return $this->is_superadmin || $this->role?->is_ps;
+        return $this->is_superadmin === true || $this->role?->is_ps === true;
     }
 
+    /** Specifically the Principal Secretary role */
     public function isPS(): bool
     {
-        return (bool) $this->role?->is_ps;
+        return $this->role?->is_ps === true;
     }
 
+    /** HR admin flag — independent of role hierarchy */
     public function isHR(): bool
     {
-        return $this->is_hr_admin || $this->role?->is_ps || $this->is_superadmin;
+        return $this->is_hr_admin === true;
     }
 
+    /**
+     * A user is a supervisor if their role allows supervising
+     * AND they actually have active subordinates.
+     */
     public function isSupervisor(): bool
     {
-        return $this->role?->can_supervise && $this->subordinates()->exists();
+        return $this->role?->can_supervise === true
+            && $this->subordinates()->where('status', 'active')->exists();
     }
 
     public function canManageUsers(): bool
@@ -161,7 +169,7 @@ class User extends Authenticatable
 
     public function canViewAllApplications(): bool
     {
-        return $this->isSuperAdmin() || $this->isPS();
+        return $this->isSuperAdmin() || $this->isPS() || $this->isHR();
     }
 
     public function canViewOutOfOffice(): bool
@@ -169,6 +177,7 @@ class User extends Authenticatable
         return $this->isSuperAdmin() || $this->isPS() || $this->isHR();
     }
 
+    /** Returns the numeric hierarchy level (1 = PS, 9 = Officer) */
     public function hierarchyLevel(): int
     {
         return $this->role?->hierarchy_level ?? 99;
@@ -179,8 +188,7 @@ class User extends Authenticatable
     // =========================================================
 
     /**
-     * Who concurs this person's foreign official travel.
-     * Always the direct supervisor.
+     * Who concurs this user's foreign official travel — always direct supervisor.
      */
     public function getConcurrer(): ?self
     {
@@ -188,15 +196,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Who gets notified when this person submits a travel application.
-     * Rules based on applicant's hierarchy level.
+     * Who gets notified when this user submits a travel application.
      */
     public function getNotifyList(): \Illuminate\Support\Collection
     {
-        $level  = $this->hierarchyLevel();
-        $deptId = $this->department_id;
+        $level = $this->hierarchyLevel();
 
-        // PS — no one above
+        // PS — nobody above
         if ($level === 1) {
             return collect();
         }
@@ -208,7 +214,7 @@ class User extends Authenticatable
                 ->get();
         }
 
-        // Director (4), Assistant Secretary (3) — notify Secretary of their directorate
+        // Director (4), Assistant Secretary (3) — notify Secretary of directorate
         if (in_array($level, [3, 4])) {
             return $this->getPeopleInDirectorateAtLevels([2]);
         }
@@ -223,8 +229,7 @@ class User extends Authenticatable
             return $this->getPeopleInDepartmentAtLevels([4, 5]);
         }
 
-        // Principal Officer (7), Senior Officer (8), Officer (9)
-        // notify all AD + DD + Director in same division
+        // Principal / Senior / Officer (7-9) — notify AD + DD + Director
         if ($level >= 7) {
             return $this->getPeopleInDepartmentAtLevels([4, 5, 6]);
         }
@@ -232,9 +237,6 @@ class User extends Authenticatable
         return collect();
     }
 
-    /**
-     * Get users in the same division at specific hierarchy levels.
-     */
     private function getPeopleInDepartmentAtLevels(array $levels): \Illuminate\Support\Collection
     {
         if (! $this->department_id) return collect();
@@ -246,9 +248,6 @@ class User extends Authenticatable
             ->get();
     }
 
-    /**
-     * Get users in the same directorate at specific hierarchy levels.
-     */
     private function getPeopleInDirectorateAtLevels(array $levels): \Illuminate\Support\Collection
     {
         $directorateId = $this->department?->directorate_id;

@@ -18,7 +18,7 @@
                 autofocus
             >
             @error('email')
-                <div class="invalid-feedback">{{ $message }}</div>
+            <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
 
@@ -27,21 +27,21 @@
                 <label for="password" class="form-label mb-0">Password</label>
                 <a href="{{ route('password.request') }}" class="auth-link small">Forgot password?</a>
             </div>
-        <div class="input-group" x-data="{ show: false }">
-            <input
-                :type="show ? 'text' : 'password'"
-                wire:model="password"
-                id="password"
-                class="form-control @error('password') is-invalid @enderror"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-            >
-            <button class="btn btn-outline-secondary" type="button" @click="show = !show" tabindex="-1">
-                <i class="bi" :class="show ? 'bi-eye-slash' : 'bi-eye'"></i>
-            </button>
-        </div>
+            <div class="input-group" x-data="{ show: false }">
+                <input
+                    :type="show ? 'text' : 'password'"
+                    wire:model="password"
+                    id="password"
+                    class="form-control @error('password') is-invalid @enderror"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                >
+                <button class="btn btn-outline-secondary" type="button" @click="show = !show" tabindex="-1">
+                    <i class="bi" :class="show ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+            </div>
             @error('password')
-                <div class="invalid-feedback d-block">{{ $message }}</div>
+            <div class="invalid-feedback d-block">{{ $message }}</div>
             @enderror
         </div>
 

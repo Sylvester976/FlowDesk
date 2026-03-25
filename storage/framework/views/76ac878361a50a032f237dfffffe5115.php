@@ -1,22 +1,23 @@
 <div>
     
     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(session('notify_type')): ?>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const map = { success: 1, warning: 2, error: 3, info: 4 };
-            notie.alert({
-                type: map['<?php echo e(session('notify_type')); ?>'] ?? 4,
-                text: '<?php echo e(session('notify_message')); ?>',
-                stay: false,
-                time: 4,
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const map = {success: 1, warning: 2, error: 3, info: 4};
+                notie.alert({
+                    type: map['<?php echo e(session('notify_type')); ?>'] ?? 4,
+                    text: '<?php echo e(session('notify_message')); ?>',
+                    stay: false,
+                    time: 4,
+                });
             });
-        });
-    </script>
+        </script>
     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
     <div class="auth-card-header text-center">
         <div class="mb-3">
-            <span style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:#e8f0fb;">
+            <span
+                style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:#e8f0fb;">
                 <i class="bi bi-envelope-check fs-4" style="color:#1a3a6b"></i>
             </span>
         </div>
@@ -59,7 +60,7 @@ $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                    <div class="invalid-feedback text-center"><?php echo e($message); ?></div>
+                <div class="invalid-feedback text-center"><?php echo e($message); ?></div>
                 <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
@@ -77,7 +78,8 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
 
         <div class="text-center mt-4">
             <p class="text-muted mb-2" style="font-size:.83rem;">Didn't receive the code?</p>
-            <button wire:click="resend" wire:loading.attr="disabled" class="btn btn-link btn-sm p-0 auth-link text-decoration-none">
+            <button wire:click="resend" wire:loading.attr="disabled"
+                    class="btn btn-link btn-sm p-0 auth-link text-decoration-none">
                 <span wire:loading.remove wire:target="resend">Resend code</span>
                 <span wire:loading wire:target="resend">Sending...</span>
             </button>

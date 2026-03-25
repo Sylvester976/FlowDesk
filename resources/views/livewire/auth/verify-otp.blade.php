@@ -1,22 +1,23 @@
 <div>
     {{-- Show flash notify from previous redirect --}}
     @if(session('notify_type'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const map = { success: 1, warning: 2, error: 3, info: 4 };
-            notie.alert({
-                type: map['{{ session('notify_type') }}'] ?? 4,
-                text: '{{ session('notify_message') }}',
-                stay: false,
-                time: 4,
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const map = {success: 1, warning: 2, error: 3, info: 4};
+                notie.alert({
+                    type: map['{{ session('notify_type') }}'] ?? 4,
+                    text: '{{ session('notify_message') }}',
+                    stay: false,
+                    time: 4,
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
     <div class="auth-card-header text-center">
         <div class="mb-3">
-            <span style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:#e8f0fb;">
+            <span
+                style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:#e8f0fb;">
                 <i class="bi bi-envelope-check fs-4" style="color:#1a3a6b"></i>
             </span>
         </div>
@@ -47,7 +48,7 @@
                     style="font-size:1.8rem; letter-spacing:.6em; padding:14px 10px;"
                 >
                 @error('code')
-                    <div class="invalid-feedback text-center">{{ $message }}</div>
+                <div class="invalid-feedback text-center">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -62,7 +63,8 @@
 
         <div class="text-center mt-4">
             <p class="text-muted mb-2" style="font-size:.83rem;">Didn't receive the code?</p>
-            <button wire:click="resend" wire:loading.attr="disabled" class="btn btn-link btn-sm p-0 auth-link text-decoration-none">
+            <button wire:click="resend" wire:loading.attr="disabled"
+                    class="btn btn-link btn-sm p-0 auth-link text-decoration-none">
                 <span wire:loading.remove wire:target="resend">Resend code</span>
                 <span wire:loading wire:target="resend">Sending...</span>
             </button>

@@ -29,7 +29,7 @@ $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                <div class="invalid-feedback"><?php echo e($message); ?></div>
+            <div class="invalid-feedback"><?php echo e($message); ?></div>
             <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
@@ -41,12 +41,12 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                 <label for="password" class="form-label mb-0">Password</label>
                 <a href="<?php echo e(route('password.request')); ?>" class="auth-link small">Forgot password?</a>
             </div>
-        <div class="input-group" x-data="{ show: false }">
-            <input
-                :type="show ? 'text' : 'password'"
-                wire:model="password"
-                id="password"
-                class="form-control <?php $__errorArgs = ['password'];
+            <div class="input-group" x-data="{ show: false }">
+                <input
+                    :type="show ? 'text' : 'password'"
+                    wire:model="password"
+                    id="password"
+                    class="form-control <?php $__errorArgs = ['password'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -54,19 +54,19 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-            >
-            <button class="btn btn-outline-secondary" type="button" @click="show = !show" tabindex="-1">
-                <i class="bi" :class="show ? 'bi-eye-slash' : 'bi-eye'"></i>
-            </button>
-        </div>
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                >
+                <button class="btn btn-outline-secondary" type="button" @click="show = !show" tabindex="-1">
+                    <i class="bi" :class="show ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
+            </div>
             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['password'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                <div class="invalid-feedback d-block"><?php echo e($message); ?></div>
+            <div class="invalid-feedback d-block"><?php echo e($message); ?></div>
             <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;

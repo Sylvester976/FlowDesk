@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+@php use App\Models\TravelApplication; @endphp
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -10,7 +11,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
 
     <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
@@ -24,11 +27,11 @@
 
     <style>
         :root {
-            --ke-navy:      #1a3a6b;
+            --ke-navy: #1a3a6b;
             --ke-navy-dark: #122850;
-            --ke-green:     #006b3f;
-            --ke-red:       #bb0000;
-            --ke-gold:      #c8a951;
+            --ke-green: #006b3f;
+            --ke-red: #bb0000;
+            --ke-gold: #c8a951;
         }
 
         /* ── Page loader ── */
@@ -44,7 +47,12 @@
             gap: 18px;
             transition: opacity .4s ease, visibility .4s ease;
         }
-        #page-loader.hide { opacity: 0; visibility: hidden; }
+
+        #page-loader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+
         .loader-runway {
             position: relative;
             width: 260px;
@@ -53,29 +61,54 @@
             border-radius: 4px;
             overflow: visible;
         }
+
         .loader-runway-fill {
             height: 100%;
             border-radius: 4px;
             background: linear-gradient(to right, #1a3a6b, #006b3f);
             animation: runway-fill 1.8s ease-in-out forwards;
         }
+
         @keyframes runway-fill {
-            0%   { width: 0%; }
-            100% { width: 100%; }
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
         }
+
         .loader-plane {
             position: absolute;
             top: -14px;
             font-size: 1.4rem;
             animation: plane-takeoff 1.8s ease-in-out forwards;
         }
+
         @keyframes plane-takeoff {
-            0%   { left: -5%;  transform: rotate(0deg)   translateY(0); }
-            70%  { left: 85%;  transform: rotate(0deg)   translateY(0); }
-            100% { left: 105%; transform: rotate(-20deg) translateY(-18px); }
+            0% {
+                left: -5%;
+                transform: rotate(0deg) translateY(0);
+            }
+            70% {
+                left: 85%;
+                transform: rotate(0deg) translateY(0);
+            }
+            100% {
+                left: 105%;
+                transform: rotate(-20deg) translateY(-18px);
+            }
         }
-        .loader-logo img { height: 48px; }
-        .loader-text { font-size: .82rem; color: #6c757d; letter-spacing: .04em; }
+
+        .loader-logo img {
+            height: 48px;
+        }
+
+        .loader-text {
+            font-size: .82rem;
+            color: #6c757d;
+            letter-spacing: .04em;
+        }
 
         /* ── Sidebar strip — ALWAYS dark, beat every theme variant ── */
         .sidebar-strip,
@@ -93,39 +126,43 @@
             background-color: #122850 !important;
             /* Override the PowerAdmin CSS variables that strip-item uses */
             --sidebar-bg: #122850;
-            --muted-color: rgba(255,255,255,0.65);
-            --accent-color: rgba(255,255,255,0.9);
+            --muted-color: rgba(255, 255, 255, 0.65);
+            --accent-color: rgba(255, 255, 255, 0.9);
             --contrast-color: #ffffff;
         }
 
         /* Strip buttons and links — always white-ish */
         .sidebar-strip .strip-item {
             background-color: transparent !important;
-            color: rgba(255,255,255,.65) !important;
+            color: rgba(255, 255, 255, .65) !important;
         }
+
         .sidebar-strip .strip-item i,
         .sidebar-strip .strip-item .ph,
         .sidebar-strip .strip-item [class^="ph-"],
         .sidebar-strip .strip-item [class*=" ph-"],
         .sidebar-strip .strip-item .bi {
-            color: rgba(255,255,255,.65) !important;
+            color: rgba(255, 255, 255, .65) !important;
         }
+
         .sidebar-strip .strip-item.active,
         .sidebar-strip .strip-item:hover,
         .sidebar-strip button.active,
         .sidebar-strip button:hover {
-            background-color: rgba(255,255,255,.14) !important;
+            background-color: rgba(255, 255, 255, .14) !important;
             color: #fff !important;
         }
+
         .sidebar-strip .strip-item.active i,
         .sidebar-strip .strip-item.active .ph,
         .sidebar-strip .strip-item:hover i,
         .sidebar-strip .strip-item:hover .ph {
             color: #fff !important;
         }
+
         .sidebar-strip-bottom a,
         .sidebar-strip-bottom .strip-item {
-            color: rgba(255,255,255,.65) !important;
+            color: rgba(255, 255, 255, .65) !important;
             background-color: transparent !important;
         }
 
@@ -136,9 +173,9 @@
             height: 3px;
             flex-shrink: 0;
             background: linear-gradient(to right,
-                #bb0000 0 33.3%,
-                #111    33.3% 66.6%,
-                #006b3f 66.6% 100%);
+            #bb0000 0 33.3%,
+            #111 33.3% 66.6%,
+            #006b3f 66.6% 100%);
         }
 
         /* Logos — never filtered/greyed */
@@ -150,18 +187,27 @@
         }
 
         /* Panel nav active/hover */
-        .panel-link.active { color: #1a3a6b !important; font-weight: 600; }
-        .panel-link:hover  { color: #006b3f !important; }
+        .panel-link.active {
+            color: #1a3a6b !important;
+            font-weight: 600;
+        }
+
+        .panel-link:hover {
+            color: #006b3f !important;
+        }
 
         /* User initials avatar */
         .user-initials-avatar {
-            width: 36px; height: 36px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: #1a3a6b;
             color: #fff;
             font-size: .75rem;
             font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
         }
 
@@ -176,7 +222,7 @@
             transform: translate(-50%, -50%) !important;
 
             border-radius: 8px !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,.15) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .15) !important;
             font-size: .88rem !important;
         }
     </style>
@@ -239,7 +285,8 @@
             <div class="header-action dropdown user-dropdown">
                 <button class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     @if(auth()->user()->profile_photo)
-                        <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt="{{ auth()->user()->full_name }}" class="avatar">
+                        <img src="{{ Storage::url(auth()->user()->profile_photo) }}"
+                             alt="{{ auth()->user()->full_name }}" class="avatar">
                     @else
                         <div class="user-initials-avatar">
                             {{ strtoupper(substr(auth()->user()->first_name,0,1).substr(auth()->user()->last_name,0,1)) }}
@@ -254,7 +301,8 @@
                 <div class="dropdown-menu dropdown-menu-end">
                     <div class="user-dropdown-header">
                         @if(auth()->user()->profile_photo)
-                            <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt="" class="user-dropdown-avatar">
+                            <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt=""
+                                 class="user-dropdown-avatar">
                         @else
                             <div class="user-initials-avatar me-2" style="width:44px;height:44px;font-size:.9rem;">
                                 {{ strtoupper(substr(auth()->user()->first_name,0,1).substr(auth()->user()->last_name,0,1)) }}
@@ -276,7 +324,8 @@
                     <div class="user-dropdown-footer">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="user-dropdown-item user-dropdown-logout w-100 border-0 bg-transparent text-start">
+                            <button type="submit"
+                                    class="user-dropdown-item user-dropdown-logout w-100 border-0 bg-transparent text-start">
                                 <i class="bi bi-box-arrow-right"></i><span>Sign Out</span>
                             </button>
                         </form>
@@ -365,46 +414,46 @@
             <ul class="strip-menu">
                 <li>
                     <button class="strip-item {{ request()->routeIs('dashboard*') ? 'active' : '' }}"
-                        data-panel="main"
-                        data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Main">
+                            data-panel="main"
+                            data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Main">
                         <i class="ph ph-squares-four"></i>
                     </button>
                 </li>
                 <li>
                     <button class="strip-item {{ request()->routeIs('travel*') ? 'active' : '' }}"
-                        data-panel="travel"
-                        data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Travel">
+                            data-panel="travel"
+                            data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Travel">
                         <i class="ph ph-airplane"></i>
                     </button>
                 </li>
                 @if(auth()->user()->canViewAllApplications() || auth()->user()->canViewOutOfOffice())
-                <li>
-                    <button class="strip-item {{ request()->routeIs('oversight*') ? 'active' : '' }}"
-                        data-panel="oversight"
-                        data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Oversight">
-                        <i class="ph ph-binoculars"></i>
-                    </button>
-                </li>
+                    <li>
+                        <button class="strip-item {{ request()->routeIs('oversight*') ? 'active' : '' }}"
+                                data-panel="oversight"
+                                data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Oversight">
+                            <i class="ph ph-binoculars"></i>
+                        </button>
+                    </li>
                 @endif
                 @if(auth()->user()->canManageUsers())
-                <li>
-                    <button class="strip-item {{ request()->routeIs('admin*') ? 'active' : '' }}"
-                        data-panel="admin"
-                        data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Administration">
-                        <i class="ph ph-users-three"></i>
-                    </button>
-                </li>
+                    <li>
+                        <button class="strip-item {{ request()->routeIs('admin*') ? 'active' : '' }}"
+                                data-panel="admin"
+                                data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Administration">
+                            <i class="ph ph-users-three"></i>
+                        </button>
+                    </li>
                 @endif
             </ul>
         </nav>
 
         <div class="sidebar-strip-bottom">
             <a href="{{ route('travel.rates') }}" class="strip-item"
-                data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Travel Rates">
+               data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Travel Rates">
                 <i class="bi bi-currency-dollar"></i>
             </a>
             <a href="{{ route('profile.edit') }}" class="sidebar-strip-avatar"
-                data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="{{ auth()->user()->full_name }}">
+               data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="{{ auth()->user()->full_name }}">
                 @if(auth()->user()->profile_photo)
                     <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt="">
                 @else
@@ -426,7 +475,8 @@
                 <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
             </div>
             <ul class="panel-nav">
-                <li><a class="panel-link {{ request()->routeIs('dashboard*') ? 'active' : '' }}" href="{{ route('dashboard') }}">Dashboard</a></li>
+                <li><a class="panel-link {{ request()->routeIs('dashboard*') ? 'active' : '' }}"
+                       href="{{ route('dashboard') }}">Dashboard</a></li>
             </ul>
         </div>
 
@@ -437,53 +487,93 @@
                 <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
             </div>
             <ul class="panel-nav">
-                <li><a class="panel-link {{ request()->routeIs('travel.index') ? 'active' : '' }}" href="{{ route('travel.index') }}">My Applications</a></li>
-                <li><a class="panel-link {{ request()->routeIs('travel.create') ? 'active' : '' }}" href="{{ route('travel.create') }}">New Application</a></li>
-                <li><a class="panel-link {{ request()->routeIs('travel.post-trip') ? 'active' : '' }}" href="{{ route('travel.post-trip') }}">
-                    Post-Trip Upload
-                    @if(auth()->user()->hasPendingPostTripUploads())
-                        <span class="badge bg-danger ms-1" style="font-size:.65rem;">!</span>
-                    @endif
-                </a></li>
+                <li><a class="panel-link {{ request()->routeIs('travel.index') ? 'active' : '' }}"
+                       href="{{ route('travel.index') }}">My Applications</a></li>
+                <li><a class="panel-link {{ request()->routeIs('travel.create') ? 'active' : '' }}"
+                       href="{{ route('travel.create') }}">New Application</a></li>
+                <li><a class="panel-link {{ request()->routeIs('travel.post-trip') ? 'active' : '' }}"
+                       href="{{ route('travel.post-trip') }}">
+                        Post-Trip Upload
+                        @if(auth()->user()->hasPendingPostTripUploads())
+                            <span class="badge bg-danger ms-1" style="font-size:.65rem;">!</span>
+                        @endif
+                    </a></li>
                 @if(auth()->user()->isSupervisor())
-                <li><a class="panel-link {{ request()->routeIs('travel.concurrence') ? 'active' : '' }}" href="{{ route('travel.concurrence') }}">Concurrence Queue</a></li>
+                    <li>
+                        <a class="panel-link {{ request()->routeIs('travel.concurrence') ? 'active' : '' }}"
+                           href="{{ route('travel.concurrence') }}">
+                            Concurrence Queue
+                            @php
+                                $pendingConcurrenceCount = TravelApplication::whereHas('concurrenceSteps',
+                                    fn($q) => $q->where('approver_id', auth()->id())->where('action', 'pending')
+                                )->count();
+                            @endphp
+                            @if($pendingConcurrenceCount > 0)
+                                <span class="badge bg-danger ms-1"
+                                      style="font-size:.65rem;">{{ $pendingConcurrenceCount }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li>
+                        <a class="panel-link {{ request()->routeIs('travel.post-trip-review') ? 'active' : '' }}"
+                           href="{{ route('travel.post-trip-review') }}">
+                            Post-Trip Review
+                            @php
+                                $pendingPostTripCount = TravelApplication::whereHas('concurrenceSteps',
+                                    fn($q) => $q->where('approver_id', auth()->id())->where('action', 'concurred')
+                                )->where('status', 'pending_uploads')->count();
+                            @endphp
+                            @if($pendingPostTripCount > 0)
+                                <span class="badge bg-warning text-dark ms-1"
+                                      style="font-size:.65rem;">{{ $pendingPostTripCount }}</span>
+                            @endif
+                        </a>
+                    </li>
                 @endif
-                <li><a class="panel-link {{ request()->routeIs('travel.rates') ? 'active' : '' }}" href="{{ route('travel.rates') }}">Travel Rates</a></li>
+                <li><a class="panel-link {{ request()->routeIs('travel.rates') ? 'active' : '' }}"
+                       href="{{ route('travel.rates') }}">Travel Rates</a></li>
             </ul>
         </div>
 
         {{-- Oversight --}}
         @if(auth()->user()->canViewAllApplications() || auth()->user()->canViewOutOfOffice())
-        <div class="sidebar-panel-section {{ request()->routeIs('oversight*') ? 'active' : '' }}" data-section="oversight">
-            <div class="sidebar-panel-header">
-                <h6>Oversight</h6>
-                <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
+            <div class="sidebar-panel-section {{ request()->routeIs('oversight*') ? 'active' : '' }}"
+                 data-section="oversight">
+                <div class="sidebar-panel-header">
+                    <h6>Oversight</h6>
+                    <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <ul class="panel-nav">
+                    @if(auth()->user()->canViewAllApplications())
+                        <li><a class="panel-link {{ request()->routeIs('oversight.all-applications') ? 'active' : '' }}"
+                               href="{{ route('oversight.all-applications') }}">All Applications</a></li>
+                        <li><a class="panel-link {{ request()->routeIs('oversight.docket') ? 'active' : '' }}"
+                               href="{{ route('oversight.docket') }}">Days Docket</a></li>
+                    @endif
+                    <li><a class="panel-link {{ request()->routeIs('oversight.out-of-office') ? 'active' : '' }}"
+                           href="{{ route('oversight.out-of-office') }}">Out of Office</a></li>
+                </ul>
             </div>
-            <ul class="panel-nav">
-                @if(auth()->user()->canViewAllApplications())
-                <li><a class="panel-link {{ request()->routeIs('oversight.all-applications') ? 'active' : '' }}" href="{{ route('oversight.all-applications') }}">All Applications</a></li>
-                <li><a class="panel-link {{ request()->routeIs('oversight.docket') ? 'active' : '' }}" href="{{ route('oversight.docket') }}">Days Docket</a></li>
-                @endif
-                <li><a class="panel-link {{ request()->routeIs('oversight.out-of-office') ? 'active' : '' }}" href="{{ route('oversight.out-of-office') }}">Out of Office</a></li>
-            </ul>
-        </div>
         @endif
 
         {{-- Administration --}}
         @if(auth()->user()->canManageUsers())
-        <div class="sidebar-panel-section {{ request()->routeIs('admin*') ? 'active' : '' }}" data-section="admin">
-            <div class="sidebar-panel-header">
-                <h6>Administration</h6>
-                <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
+            <div class="sidebar-panel-section {{ request()->routeIs('admin*') ? 'active' : '' }}" data-section="admin">
+                <div class="sidebar-panel-header">
+                    <h6>Administration</h6>
+                    <button class="sidebar-panel-close"><i class="bi bi-x-lg"></i></button>
+                </div>
+                <ul class="panel-nav">
+                    <li><a class="panel-link {{ request()->routeIs('admin.staff*') ? 'active' : '' }}"
+                           href="{{ route('admin.staff.index') }}">Staff Management</a></li>
+                    <li><a class="panel-link {{ request()->routeIs('admin.org*') ? 'active' : '' }}"
+                           href="{{ route('admin.org.index') }}">Org Structure</a></li>
+                    @if(auth()->user()->canAssignRoles())
+                        <li><a class="panel-link {{ request()->routeIs('admin.roles*') ? 'active' : '' }}"
+                               href="{{ route('admin.roles.index') }}">Roles &amp; Hierarchy</a></li>
+                    @endif
+                </ul>
             </div>
-            <ul class="panel-nav">
-                <li><a class="panel-link {{ request()->routeIs('admin.staff*') ? 'active' : '' }}" href="{{ route('admin.staff.index') }}">Staff Management</a></li>
-                <li><a class="panel-link {{ request()->routeIs('admin.org*') ? 'active' : '' }}" href="{{ route('admin.org.index') }}">Org Structure</a></li>
-                @if(auth()->user()->canAssignRoles())
-                <li><a class="panel-link {{ request()->routeIs('admin.roles*') ? 'active' : '' }}" href="{{ route('admin.roles.index') }}">Roles &amp; Hierarchy</a></li>
-                @endif
-            </ul>
-        </div>
         @endif
 
     </div>
@@ -540,15 +630,20 @@
 
     // Notie bridge
     window.addEventListener('notify', e => {
-        const map = { success: 1, warning: 2, error: 3, info: 4 };
-        notie.alert({ type: map[e.detail.type] ?? 4, text: e.detail.message, stay: false, time: 4 });
+        const map = {success: 1, warning: 2, error: 3, info: 4};
+        notie.alert({type: map[e.detail.type] ?? 4, text: e.detail.message, stay: false, time: 4});
     });
 
     // Session flash toast (post-redirect)
     @if(session('notify_type'))
     document.addEventListener('DOMContentLoaded', () => {
-        const map = { success: 1, warning: 2, error: 3, info: 4 };
-        notie.alert({ type: map['{{ session('notify_type') }}'] ?? 4, text: '{{ session('notify_message') }}', stay: false, time: 5 });
+        const map = {success: 1, warning: 2, error: 3, info: 4};
+        notie.alert({
+            type: map['{{ session('notify_type') }}'] ?? 4,
+            text: '{{ session('notify_message') }}',
+            stay: false,
+            time: 5
+        });
     });
     @endif
 

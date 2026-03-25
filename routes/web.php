@@ -8,28 +8,31 @@ use App\Livewire\Admin\CreateStaff;
 use App\Livewire\Admin\RolesManager;
 use App\Livewire\Admin\OrgStructureManager;
 use App\Livewire\Admin\EditStaff;
-use Illuminate\Support\Facades\Route;
+use App\Livewire\AllNotifications;
+use App\Livewire\ProfileEdit;
+use App\Livewire\TravelRates;
 use App\Livewire\Travel\TravelWizard;
 use App\Livewire\Travel\MyApplications;
 use App\Livewire\Travel\ApplicationDetail;
-use App\Http\Controllers\DocumentController;
-use App\Livewire\AllNotifications;
 use App\Livewire\Travel\ConcurrenceQueue;
 use App\Livewire\Travel\EditApplication;
+use App\Livewire\Travel\PostTripUpload;
+use App\Livewire\Travel\PostTripReview;
+use App\Livewire\Dashboard\StaffDashboard;
+use App\Livewire\Dashboard\SupervisorDashboard;
+use App\Livewire\Dashboard\HRDashboard;
+use App\Livewire\Dashboard\PSDashboard;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ClearanceLetterController;
-
-
+use Illuminate\Support\Facades\Route;
 
 // ============================================================
 // Guest routes
 // ============================================================
 Route::middleware('guest')->group(function () {
-
-    Route::get('/login', Login::class)->name('login');
-    Route::get('/otp', VerifyOtp::class)->name('auth.otp');
-
-    Route::get('/forgot-password', fn() => view('auth.forgot-password'))
-        ->name('password.request');
+    Route::get('/login',           Login::class)->name('login');
+    Route::get('/otp',             VerifyOtp::class)->name('auth.otp');
+    Route::get('/forgot-password', fn() => view('auth.forgot-password'))->name('password.request');
 });
 
 // ============================================================
@@ -48,69 +51,64 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('login');
     })->name('logout');
 
-    // Dashboard — role-aware redirect
+    // --------------------------------------------------------
+    // Dashboard
+    // --------------------------------------------------------
     Route::get('/dashboard', function () {
         $user = auth()->user();
-
-        if ($user->isSuperAdmin() || $user->isPS()) {
-            return redirect()->route('dashboard.ps');
-        }
-        if ($user->isHR()) {
-            return redirect()->route('dashboard.hr');
-        }
-        if ($user->isSupervisor()) {
-            return redirect()->route('dashboard.supervisor');
-        }
+        if ($user->isSuperAdmin() || $user->isPS()) return redirect()->route('dashboard.ps');
+        if ($user->isHR())                           return redirect()->route('dashboard.hr');
+        if ($user->isSupervisor())                   return redirect()->route('dashboard.supervisor');
         return redirect()->route('dashboard.staff');
-
     })->name('dashboard');
 
-    Route::get('/dashboard/staff',      fn() => view('dashboard.staff'))->name('dashboard.staff');
-    Route::get('/dashboard/supervisor', fn() => view('dashboard.supervisor'))->name('dashboard.supervisor');
-    Route::get('/dashboard/hr',         fn() => view('dashboard.hr'))->name('dashboard.hr');
-    Route::get('/dashboard/ps',         fn() => view('dashboard.ps'))->name('dashboard.ps');
+    Route::get('/dashboard/staff',      StaffDashboard::class)->name('dashboard.staff');
+    Route::get('/dashboard/supervisor', SupervisorDashboard::class)->name('dashboard.supervisor');
+    Route::get('/dashboard/hr',         HRDashboard::class)->name('dashboard.hr');
+    Route::get('/dashboard/ps',         PSDashboard::class)->name('dashboard.ps');
 
-    Route::get('/profile', fn() => view('profile.edit'))->name('profile.edit');
+    // --------------------------------------------------------
+    // Profile & Notifications
+    // --------------------------------------------------------
+    Route::get('/profile',       ProfileEdit::class)->name('profile.edit');
+    Route::get('/notifications', AllNotifications::class)->name('notifications.index');
 
     // --------------------------------------------------------
     // Travel applications
     // --------------------------------------------------------
     Route::prefix('travel')->name('travel.')->group(function () {
-        Route::get('/',            MyApplications::class)->name('index');
-        Route::get('/apply',       TravelWizard::class)->name('create');
-        Route::get('/rates',       fn() => view('travel.rates'))->name('rates');
-        Route::get('/post-trip',   fn() => view('travel.post-trip'))->name('post-trip');
-        Route::get('/concurrence', ConcurrenceQueue::class)->name('concurrence');
-        Route::get('/document/{document}',       [DocumentController::class, 'show'])->name('document');
-        Route::get('/clearance/{application}',   [ClearanceLetterController::class, 'show'])->name('clearance');
-        Route::get('/{application}/edit',        EditApplication::class)->name('edit');
-        Route::get('/{application}',             ApplicationDetail::class)->name('show');
+        Route::get('/',                 MyApplications::class)->name('index');
+        Route::get('/apply',            TravelWizard::class)->name('create');
+        Route::get('/rates',            TravelRates::class)->name('rates');
+        Route::get('/post-trip',        PostTripUpload::class)->name('post-trip');
+        Route::get('/post-trip-review', PostTripReview::class)->name('post-trip-review');
+        Route::get('/concurrence',      ConcurrenceQueue::class)->name('concurrence');
+
+        Route::get('/document/{document}',     [DocumentController::class, 'show'])->name('document');
+        Route::get('/clearance/{application}', [ClearanceLetterController::class, 'show'])->name('clearance');
+        Route::get('/{application}/edit',      EditApplication::class)->name('edit');
+
+        // Must be last — wildcard
+        Route::get('/{application}', ApplicationDetail::class)->name('show');
     });
 
     // --------------------------------------------------------
-    // Oversight (PS / Superadmin)
+    // Oversight — Phase 6 (built next)
     // --------------------------------------------------------
     Route::prefix('oversight')->name('oversight.')->group(function () {
-        Route::get('/applications',  fn() => view('oversight.all-applications'))->name('all-applications');
-        Route::get('/out-of-office', fn() => view('oversight.out-of-office'))->name('out-of-office');
-        Route::get('/docket',        fn() => view('oversight.docket'))->name('docket');
+        Route::get('/applications',  fn() => abort(404))->name('all-applications');
+        Route::get('/out-of-office', fn() => abort(404))->name('out-of-office');
+        Route::get('/docket',        fn() => abort(404))->name('docket');
     });
 
     // --------------------------------------------------------
-    // Admin & HR
+    // Administration (HR / Superadmin)
     // --------------------------------------------------------
     Route::prefix('admin')->name('admin.')->group(function () {
-
         Route::get('/staff',             StaffList::class)->name('staff.index');
         Route::get('/staff/create',      CreateStaff::class)->name('staff.create');
         Route::get('/staff/{user}/edit', EditStaff::class)->name('staff.edit');
-
-        Route::get('/org',   OrgStructureManager::class)->name('org.index');
-        Route::get('/roles', RolesManager::class)->name('roles.index');
+        Route::get('/org',               OrgStructureManager::class)->name('org.index');
+        Route::get('/roles',             RolesManager::class)->name('roles.index');
     });
-
-    // --------------------------------------------------------
-    // Notifications
-    // --------------------------------------------------------
-    Route::get('/notifications', AllNotifications::class)->name('notifications.index');
 });

@@ -1,7 +1,8 @@
 <div>
     <div class="auth-card-header text-center">
         <div class="mb-3">
-            <span style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:#e8f5ee;">
+            <span
+                style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:#e8f5ee;">
                 <i class="bi bi-key fs-4" style="color:#006b3f"></i>
             </span>
         </div>
@@ -24,7 +25,7 @@
                     autofocus
                 >
                 <button class="btn btn-outline-secondary" type="button"
-                    @click="show = !show" tabindex="-1">
+                        @click="show = !show" tabindex="-1">
                     <i class="bi" :class="show ? 'bi-eye-slash' : 'bi-eye'"></i>
                 </button>
             </div>
@@ -42,7 +43,7 @@
                     autocomplete="new-password"
                 >
                 <button class="btn btn-outline-secondary" type="button"
-                    @click="show = !show" tabindex="-1">
+                        @click="show = !show" tabindex="-1">
                     <i class="bi" :class="show ? 'bi-eye-slash' : 'bi-eye'"></i>
                 </button>
             </div>
