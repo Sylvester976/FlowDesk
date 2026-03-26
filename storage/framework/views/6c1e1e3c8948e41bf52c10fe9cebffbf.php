@@ -3,22 +3,119 @@
 <head>
     <meta charset="utf-8">
     <style>
-        body { font-family:'Segoe UI',Arial,sans-serif;background:#f4f4f4;margin:0;padding:0; }
-        .wrapper { max-width:560px;margin:40px auto;background:#fff;border-radius:8px;overflow:hidden; }
-        .header { background:#1a3a6b;padding:20px 32px; }
-        .header h1 { color:#fff;margin:0;font-size:17px;font-weight:600; }
-        .header span { color:#c8a951; }
-        .stripe { height:4px;background:linear-gradient(to right,#bb0000 0 33.3%,#111 33.3% 66.6%,#006b3f 66.6% 100%); }
-        .body { padding:28px 32px; }
-        .ref { display:inline-block;background:#e8f0fb;color:#1a3a6b;padding:4px 12px;border-radius:20px;font-size:13px;font-weight:600;margin-bottom:16px; }
-        table { width:100%;border-collapse:collapse;margin:16px 0; }
-        th { background:#f8f9fa;padding:8px 12px;text-align:left;font-size:12px;color:#6c757d;font-weight:500;text-transform:uppercase;letter-spacing:.04em; }
-        td { padding:10px 12px;border-bottom:1px solid #f0f0f0;font-size:14px;color:#374151; }
-        .action-box { background:#e8f5ee;border-left:4px solid #006b3f;border-radius:4px;padding:14px 16px;margin:20px 0; }
-        .action-box p { color:#085041;font-size:13px;margin:0; }
-        .btn { display:inline-block;background:#1a3a6b;color:#fff;padding:10px 24px;border-radius:6px;text-decoration:none;font-weight:600;font-size:14px;margin:8px 0; }
-        .footer { background:#f8f9fa;padding:14px 32px;border-top:1px solid #eee; }
-        .footer p { color:#999;font-size:12px;margin:0;line-height:1.6; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            max-width: 560px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1a3a6b;
+            padding: 20px 32px;
+        }
+
+        .header h1 {
+            color: #fff;
+            margin: 0;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .header span {
+            color: #c8a951;
+        }
+
+        .stripe {
+            height: 4px;
+            background: linear-gradient(to right, #bb0000 0 33.3%, #111 33.3% 66.6%, #006b3f 66.6% 100%);
+        }
+
+        .body {
+            padding: 28px 32px;
+        }
+
+        .ref {
+            display: inline-block;
+            background: #e8f0fb;
+            color: #1a3a6b;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 12px;
+            color: #6c757d;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .action-box {
+            background: #e8f5ee;
+            border-left: 4px solid #006b3f;
+            border-radius: 4px;
+            padding: 14px 16px;
+            margin: 20px 0;
+        }
+
+        .action-box p {
+            color: #085041;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #1a3a6b;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 14px 32px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer p {
+            color: #999;
+            font-size: 12px;
+            margin: 0;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -34,39 +131,60 @@
         <span class="ref">Ref: <?php echo e($app->reference_number); ?></span>
 
         <table>
-            <tr><th>Field</th><th>Details</th></tr>
-            <tr><td>Travel Type</td><td><?php echo e($app->getTravelTypeLabel()); ?></td></tr>
-            <tr><td>Applicant</td><td><?php echo e($applicant->full_name); ?></td></tr>
+            <tr>
+                <th>Field</th>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>Travel Type</td>
+                <td><?php echo e($app->getTravelTypeLabel()); ?></td>
+            </tr>
+            <tr>
+                <td>Applicant</td>
+                <td><?php echo e($applicant->full_name); ?></td>
+            </tr>
             <tr>
                 <td>Destination</td>
                 <td>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($app->country): ?> <?php echo e($app->country->name); ?> <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($app->county): ?> <?php echo e($app->county->name); ?> County <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($app->destination_details): ?> — <?php echo e($app->destination_details); ?> <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($app->country): ?>
+                        <?php echo e($app->country->name); ?>
+
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($app->county): ?>
+                        <?php echo e($app->county->name); ?> County
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($app->destination_details): ?>
+                        — <?php echo e($app->destination_details); ?>
+
+                    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 </td>
             </tr>
             <tr>
                 <td>Dates</td>
                 <td><?php echo e($app->departure_date->format('d M Y')); ?> → <?php echo e($app->return_date->format('d M Y')); ?></td>
             </tr>
-            <tr><td>Purpose</td><td><?php echo e(Str::limit($app->purpose, 200)); ?></td></tr>
+            <tr>
+                <td>Purpose</td>
+                <td><?php echo e(Str::limit($app->purpose, 200)); ?></td>
+            </tr>
         </table>
 
         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($isConcurrer): ?>
-        <div class="action-box">
-            <p><strong>Action Required:</strong> As the supervising officer, you are required to
-            review and concur or decline this application. Please log in to FlowDesk to take action.</p>
-        </div>
-        <p style="text-align:center;">
-            <a href="<?php echo e(url('/travel/concurrence')); ?>" class="btn">Review Application</a>
-        </p>
+            <div class="action-box">
+                <p><strong>Action Required:</strong> As the supervising officer, you are required to
+                    review and concur or decline this application. Please log in to FlowDesk to take action.</p>
+            </div>
+            <p style="text-align:center;">
+                <a href="<?php echo e(url('/travel/concurrence')); ?>" class="btn">Review Application</a>
+            </p>
         <?php else: ?>
-        <p style="font-size:13px;color:#6c757d;">This is an information notification only. No action is required from you.</p>
+            <p style="font-size:13px;color:#6c757d;">This is an information notification only. No action is required
+                from you.</p>
         <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
     </div>
     <div class="footer">
         <p>FlowDesk — Travel Information Management System<br>
-        Government of Kenya — State Department of ICT</p>
+            Government of Kenya — State Department of ICT</p>
     </div>
 </div>
 </body>

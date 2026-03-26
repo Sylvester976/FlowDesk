@@ -332,7 +332,7 @@
                                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                                     <div class="text-muted" style="font-size:.74rem;">
                                         <?php echo e($log->user?->full_name); ?> &mdash;
-                                        <?php echo e($log->created_at->format('d M Y, H:i')); ?>
+                                        <?php echo e($log->created_at?->format('d M Y, H:i') ?? '—'); ?>
 
                                     </div>
                                 </div>

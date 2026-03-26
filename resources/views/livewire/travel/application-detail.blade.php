@@ -315,7 +315,7 @@
                                     @endif
                                     <div class="text-muted" style="font-size:.74rem;">
                                         {{ $log->user?->full_name }} &mdash;
-                                        {{ $log->created_at->format('d M Y, H:i') }}
+                                        {{ $log->created_at?->format('d M Y, H:i') ?? '—' }}
                                     </div>
                                 </div>
                             </div>

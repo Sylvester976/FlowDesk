@@ -39,4 +39,22 @@ class AuthLog extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public static function record(
+        string $event,
+        ?int $userId = null,
+        ?string $emailAttempted = null,
+        ?string $notes = null,
+    ): self {
+        return static::create([
+            'user_id'          => $userId,
+            'email_attempted'  => $emailAttempted,
+            'event'            => $event,
+            'ip_address'       => request()?->ip(),
+            'user_agent'       => request()?->userAgent(),
+            'notes'            => $notes,
+            'created_at'       => now(),
+        ]);
+    }
+
 }
