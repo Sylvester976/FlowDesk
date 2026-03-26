@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Oversight\AuditTrail;
 use App\Livewire\Oversight\Reports;
 use App\Http\Controllers\ReportsController;
+use App\Livewire\Auth\ForgotPassword;
 
 // ============================================================
 // Guest routes
@@ -38,7 +39,7 @@ use App\Http\Controllers\ReportsController;
 Route::middleware('guest')->group(function () {
     Route::get('/login',           Login::class)->name('login');
     Route::get('/otp',             VerifyOtp::class)->name('auth.otp');
-    Route::get('/forgot-password', fn() => view('auth.forgot-password'))->name('password.request');
+    Route::get('/forgot-password', ForgotPassword::class)->name('password.request');
 });
 
 // ============================================================

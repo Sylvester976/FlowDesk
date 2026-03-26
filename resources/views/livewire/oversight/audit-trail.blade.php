@@ -172,7 +172,7 @@
                             </td>
                             <td>
                                 @php
-                                    $authColor = match($log->action) {
+                                    $authColor = match($log->event) {
                                         'login'           => ['bg' => '#e8f5ee', 'text' => '#006b3f'],
                                         'logout'          => ['bg' => '#f0f0f0', 'text' => '#555'],
                                         'failed_login'    => ['bg' => '#ffebee', 'text' => '#bb0000'],
@@ -184,7 +184,7 @@
                                 @endphp
                                 <span class="badge" style="font-size:.72rem;
                                     background:{{ $authColor['bg'] }};color:{{ $authColor['text'] }};">
-                                    {{ ucfirst(str_replace('_', ' ', $log->action)) }}
+                                    {{ ucfirst(str_replace('_', ' ', $log->event)) }}
                                 </span>
                             </td>
                             <td>
@@ -192,7 +192,7 @@
                                     {{ $log->user?->full_name ?? 'Unknown' }}
                                 </div>
                                 <div class="text-muted" style="font-size:.72rem;">
-                                    {{ $log->user?->email }}
+                                    {{ $log->email_attempted ?? $log->user?->email }}
                                 </div>
                             </td>
                             <td class="d-none d-sm-table-cell" style="font-size:.8rem;font-family:monospace;">

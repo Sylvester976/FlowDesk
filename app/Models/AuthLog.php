@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AuthLog extends Model
 {
+    use MassPrunable;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -23,25 +27,16 @@ class AuthLog extends Model
         'created_at' => 'datetime',
     ];
 
+    // ── Pruning — keep 1 year of auth logs ───────────────────
+    public function prunable(): Builder
+    {
+        return static::where('created_at', '<', now()->subYear());
+    }
+
+    // ── Relationships ─────────────────────────────────────────
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public static function record(
-        string $event,
-        ?int $userId = null,
-        ?string $emailAttempted = null,
-        ?string $notes = null,
-    ): self {
-        return static::create([
-            'user_id'          => $userId,
-            'email_attempted'  => $emailAttempted,
-            'event'            => $event,
-            'ip_address'       => request()?->ip(),
-            'user_agent'       => request()?->userAgent(),
-            'notes'            => $notes,
-            'created_at'       => now(),
-        ]);
     }
 }

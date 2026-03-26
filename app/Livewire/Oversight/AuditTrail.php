@@ -55,14 +55,16 @@ class AuditTrail extends Component
                           ->orWhere('last_name',  'ilike', "%{$this->search}%")
                           ->orWhere('email',      'ilike', "%{$this->search}%")
                     )->orWhere('ip_address', 'ilike', "%{$this->search}%")
+                      ->orWhere('email_attempted', 'ilike', "%{$this->search}%")
                 )
-                ->when($this->filterAction, fn($q) => $q->where('action', $this->filterAction))
+                ->when($this->filterAction, fn($q) => $q->where('event', $this->filterAction))
                 ->when($this->dateFrom,     fn($q) => $q->whereDate('created_at', '>=', $this->dateFrom))
                 ->when($this->dateTo,       fn($q) => $q->whereDate('created_at', '<=', $this->dateTo))
                 ->latest()
                 ->paginate(20);
 
-            $actions = AuthLog::distinct()->orderBy('action')->pluck('action');
+            // Static list — avoids querying a column that may not exist
+            $actions = collect(['login', 'logout', 'failed_login', 'otp_sent', 'otp_verified', 'password_changed']);
         }
 
         $users = User::orderBy('first_name')->get(['id', 'first_name', 'last_name']);

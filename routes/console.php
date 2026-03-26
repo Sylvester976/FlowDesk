@@ -11,8 +11,18 @@ Schedule::command('docket:reset')
         \Illuminate\Support\Facades\Log::info('Annual docket reset completed successfully.');
     });
 
-// ── Post-trip upload reminders — runs daily at 8am ───────────
-Schedule::command('reminders:post-trip')
-    ->dailyAt('08:00')
+// ── Log pruning — runs on the 1st of each month at 1am ───────
+// ApplicationLog: keeps 2 years
+// AuthLog: keeps 1 year
+Schedule::command('model:prune', [
+    '--model' => [
+        \App\Models\ApplicationLog::class,
+        \App\Models\AuthLog::class,
+    ],
+])
+    ->monthlyOn(1, '01:00')
     ->withoutOverlapping()
-    ->runInBackground();
+    ->runInBackground()
+    ->onSuccess(function () {
+        \Illuminate\Support\Facades\Log::info('Log pruning completed successfully.');
+    });
