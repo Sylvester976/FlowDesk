@@ -40,6 +40,11 @@ class User extends Authenticatable
         'profile_photo',
         'last_login_at',
         'last_login_ip',
+        'user_service_id',
+        'sync_status',
+        'sync_direction',
+        'last_synced_at',
+        'sync_meta',
     ];
 
     protected $hidden = [

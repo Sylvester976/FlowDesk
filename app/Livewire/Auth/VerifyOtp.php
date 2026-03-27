@@ -2,19 +2,20 @@
 
 namespace App\Livewire\Auth;
 
-use App\Mail\OtpMail;
 use App\Models\AuthLog;
 use App\Models\Otp;
 use App\Models\User;
+use App\Services\UserServiceClient;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class VerifyOtp extends Component
 {
-    public string $code = '';
-    public bool $canResend = false;
-    public int $resendCooldown = 60;
+    public string $code         = '';
+    public bool   $canResend    = false;
+    public int    $resendCooldown = 60;
 
     protected array $rules = [
         'code' => ['required', 'digits:6'],
@@ -27,12 +28,12 @@ class VerifyOtp extends Component
         }
     }
 
-    public function submit(): void
+    public function submit(UserServiceClient $client): void
     {
         $this->validate();
 
-        $userId = session('otp_user_id');
-        $user   = User::find($userId);
+        $userId   = session('otp_user_id');
+        $user     = User::find($userId);
 
         if (! $user) {
             $this->redirect(route('login'), navigate: false);
@@ -55,9 +56,9 @@ class VerifyOtp extends Component
         if ($otp->attempts > 3) {
             $otp->update(['used' => true]);
             AuthLog::record('otp_failed', $user->id, $user->email, 'Max attempts exceeded');
-            session()->forget(['otp_user_id', 'otp_remember']);
+            session()->forget(['otp_user_id', 'otp_remember', 'otp_pre_auth', 'otp_auth_mode']);
             $this->dispatch('notify', type: 'error', message: 'Too many incorrect attempts. Please sign in again.');
-            $this->addError('code', 'Too many incorrect attempts. Please sign in again.');
+            $this->redirect(route('login'), navigate: false);
             return;
         }
 
@@ -71,14 +72,50 @@ class VerifyOtp extends Component
         if ($otp->code !== $this->code) {
             $remaining = 3 - $otp->attempts;
             AuthLog::record('otp_failed', $user->id, $user->email, "Wrong code. {$remaining} attempts left");
-            $this->dispatch('notify', type: 'error', message: "Incorrect code. {$remaining} " . ($remaining === 1 ? 'attempt' : 'attempts') . ' remaining.');
+            $this->dispatch('notify', type: 'error',
+                message: "Incorrect code. {$remaining} " . ($remaining === 1 ? 'attempt' : 'attempts') . ' remaining.');
             $this->addError('code', "Incorrect code. {$remaining} " . ($remaining === 1 ? 'attempt' : 'attempts') . ' remaining.');
             return;
         }
 
-        // Success
+        // ── OTP verified ──────────────────────────────────────
         $otp->update(['used' => true]);
 
+        // ── Exchange pre-auth token for full JWT ──────────────
+        // Only if authenticated via User Service (not local fallback)
+        $authMode    = session('otp_auth_mode', 'local');
+        $preAuthToken = session('otp_pre_auth');
+
+        if ($authMode === 'user_service' && $preAuthToken && $client->isConfigured()) {
+            $tokenResponse = $client->exchangeToken($preAuthToken);
+
+            if ($tokenResponse && isset($tokenResponse['access_token'])) {
+                // Store JWT in session for future use
+                session([
+                    'us_access_token'  => $tokenResponse['access_token'],
+                    'us_refresh_token' => $tokenResponse['refresh_token'],
+                ]);
+
+                // Update local shadow with latest data from User Service
+                if (isset($tokenResponse['user'])) {
+                    $remote = $tokenResponse['user'];
+                    $user->updateQuietly([
+                        'user_service_id' => $remote['id'],
+                        'sync_status'     => 'synced',
+                        'last_synced_at'  => now(),
+                    ]);
+                }
+
+                Log::info("User {$user->email} authenticated via User Service JWT");
+
+            } else {
+                // Token exchange failed — continue with local session anyway
+                // This can happen if User Service went down between login and OTP
+                Log::warning("JWT exchange failed for {$user->email} — continuing with local session");
+            }
+        }
+
+        // ── Log in to FlowDesk session ────────────────────────
         $remember = session('otp_remember', false);
         Auth::login($user, $remember);
 
@@ -87,11 +124,10 @@ class VerifyOtp extends Component
             'last_login_ip' => request()->ip(),
         ]);
 
-        AuthLog::record('login_success', $user->id, $user->email);
+        AuthLog::record('login_success', $user->id, $user->email, "Auth mode: {$authMode}");
 
-        session()->forget(['otp_user_id', 'otp_remember']);
+        session()->forget(['otp_user_id', 'otp_remember', 'otp_pre_auth', 'otp_auth_mode']);
 
-        // Flash welcome — shows on dashboard after redirect
         session()->flash('notify_type', 'success');
         session()->flash('notify_message', 'Welcome back, ' . $user->first_name . '!');
 
@@ -121,17 +157,21 @@ class VerifyOtp extends Component
             'ip_address' => request()->ip(),
         ]);
 
-        Mail::to($user->email)->send(new OtpMail($user, $code));
+        try {
+            Mail::html(
+                view('emails.otp', ['user' => $user, 'code' => $code])->render(),
+                fn($m) => $m->to($user->email)->subject('FlowDesk — Your Login Code')
+            );
+        } catch (\Exception $e) {
+            Log::error("OTP resend email failed: " . $e->getMessage());
+        }
 
         AuthLog::record('otp_sent', $user->id, $user->email, 'Resend requested');
 
         $this->dispatch('notify', type: 'info', message: 'New code sent — check your email.');
-
         $this->canResend      = false;
         $this->resendCooldown = 60;
         $this->code           = '';
-
-        session()->flash('resent', 'A new code has been sent to your email.');
     }
 
     private function dashboardRoute(User $user): string
@@ -139,15 +179,12 @@ class VerifyOtp extends Component
         if ($user->isSuperAdmin() || $user->isPS()) {
             return route('dashboard.ps');
         }
-
         if ($user->isHR()) {
             return route('dashboard.hr');
         }
-
         if ($user->isSupervisor()) {
             return route('dashboard.supervisor');
         }
-
         return route('dashboard.staff');
     }
 

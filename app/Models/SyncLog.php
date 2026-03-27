@@ -17,6 +17,8 @@ class SyncLog extends Model
     protected $casts = [
         'started_at'    => 'datetime',
         'completed_at'  => 'datetime',
+        'last_synced_at' => 'datetime',
+        'sync_meta'      => 'array',
         'conflicts'     => 'array',
         'errors'        => 'array',
     ];

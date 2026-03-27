@@ -3,11 +3,13 @@
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\VerifyOtp;
 use App\Livewire\Auth\ChangePassword;
+use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Admin\StaffList;
 use App\Livewire\Admin\CreateStaff;
+use App\Livewire\Admin\EditStaff;
 use App\Livewire\Admin\RolesManager;
 use App\Livewire\Admin\OrgStructureManager;
-use App\Livewire\Admin\EditStaff;
+use App\Livewire\Admin\UserServiceSync;
 use App\Livewire\AllNotifications;
 use App\Livewire\ProfileEdit;
 use App\Livewire\TravelRates;
@@ -25,15 +27,21 @@ use App\Livewire\Dashboard\PSDashboard;
 use App\Livewire\Oversight\AllApplications;
 use App\Livewire\Oversight\OutOfOffice;
 use App\Livewire\Oversight\DaysDocket;
-use App\Http\Controllers\DocumentController;
-use App\Http\Controllers\ClearanceLetterController;
-use Illuminate\Support\Facades\Route;
 use App\Livewire\Oversight\AuditTrail;
 use App\Livewire\Oversight\Reports;
+use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\ClearanceLetterController;
 use App\Http\Controllers\ReportsController;
-use App\Livewire\Auth\ForgotPassword;
-use App\Livewire\Admin\UserServiceSync;
 use App\Http\Controllers\UserServiceWebhookController;
+use Illuminate\Support\Facades\Route;
+
+// ============================================================
+// Webhook — CSRF exempt (called by User Service)
+// ============================================================
+Route::post('/api/webhook/user-service',
+    [UserServiceWebhookController::class, 'handle'])
+    ->name('webhook.user-service')
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
 
 // ============================================================
 // Guest routes
@@ -83,7 +91,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications', AllNotifications::class)->name('notifications.index');
 
     // --------------------------------------------------------
-    // Travel applications
+    // Travel
     // --------------------------------------------------------
     Route::prefix('travel')->name('travel.')->group(function () {
         Route::get('/',                 MyApplications::class)->name('index');
@@ -102,19 +110,19 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // --------------------------------------------------------
-    // Oversight (PS / HR / Superadmin)
+    // Oversight
     // --------------------------------------------------------
     Route::prefix('oversight')->name('oversight.')->group(function () {
         Route::get('/applications',  AllApplications::class)->name('all-applications');
         Route::get('/out-of-office', OutOfOffice::class)->name('out-of-office');
         Route::get('/docket',        DaysDocket::class)->name('docket');
-        Route::get('/audit',    AuditTrail::class)->name('audit');
-        Route::get('/reports',  Reports::class)->name('reports');
+        Route::get('/audit',         AuditTrail::class)->name('audit');
+        Route::get('/reports',       Reports::class)->name('reports');
     });
-    // --------------------------------------------------------
-    // Reports
-    // --------------------------------------------------------
 
+    // --------------------------------------------------------
+    // Reports downloads
+    // --------------------------------------------------------
     Route::prefix('reports')->name('reports.')->group(function () {
         Route::get('/applications', [ReportsController::class, 'applications'])->name('applications');
         Route::get('/summary',      [ReportsController::class, 'summary'])->name('summary');
@@ -122,7 +130,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // --------------------------------------------------------
-    // Administration (HR / Superadmin)
+    // Administration
     // --------------------------------------------------------
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/staff',             StaffList::class)->name('staff.index');
@@ -130,13 +138,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/staff/{user}/edit', EditStaff::class)->name('staff.edit');
         Route::get('/org',               OrgStructureManager::class)->name('org.index');
         Route::get('/roles',             RolesManager::class)->name('roles.index');
-        Route::get('/admin/sync', UserServiceSync::class)->name('admin.sync');
+        Route::get('/sync',              UserServiceSync::class)->name('sync');
     });
-
-    // Webhook — exempt from CSRF
-    Route::post('/api/webhook/user-service',
-        [UserServiceWebhookController::class, 'handle'])
-        ->name('webhook.user-service')
-        ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
-
 });

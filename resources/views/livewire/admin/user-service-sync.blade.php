@@ -166,7 +166,7 @@
                                     </td>
                                     <td class="d-none d-sm-table-cell text-muted"
                                         style="font-size:.78rem;">
-                                        {{ $user->last_synced_at?->diffForHumans() ?? 'Never' }}
+                                        {{ $user->last_synced_at ? \Carbon\Carbon::parse($user->last_synced_at)->diffForHumans() : 'Never' }}
                                     </td>
                                     @if($isHealthy)
                                     <td>
@@ -212,7 +212,7 @@
                                 {{ ucfirst($log->sync_type) }} Sync
                             </span>
                             <span class="text-muted" style="font-size:.74rem;">
-                                {{ $log->started_at->diffForHumans() }}
+                                {{ \Carbon\Carbon::parse($log->started_at)->diffForHumans() }}
                             </span>
                         </div>
                         <div style="font-size:.78rem;">

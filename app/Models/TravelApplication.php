@@ -163,6 +163,7 @@ class TravelApplication extends Model
             'action'      => $action,
             'description' => $description,
             'meta'        => $meta,
+            'created_at'  => now(),
         ]);
     }
 

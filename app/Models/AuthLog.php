@@ -27,34 +27,41 @@ class AuthLog extends Model
         'created_at' => 'datetime',
     ];
 
-    // ── Pruning — keep 1 year of auth logs ───────────────────
+    // ── Pruning — keep 1 year ─────────────────────────────────
     public function prunable(): Builder
     {
         return static::where('created_at', '<', now()->subYear());
     }
 
     // ── Relationships ─────────────────────────────────────────
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    // ── Static helper ─────────────────────────────────────────
+    /**
+     * Convenience method used throughout the auth flow.
+     *
+     * Usage:
+     *   AuthLog::record('login_success', $user->id, $user->email);
+     *   AuthLog::record('login_failed', null, $emailAttempted, 'reason here');
+     *   AuthLog::record('lockout', null, $email, 'Too many attempts');
+     */
     public static function record(
-        string $event,
-        ?int $userId = null,
+        string  $event,
+        ?int    $userId,
         ?string $emailAttempted = null,
-        ?string $notes = null,
-    ): self {
+        ?string $notes = null
+    ): static {
         return static::create([
-            'user_id'          => $userId,
-            'email_attempted'  => $emailAttempted,
-            'event'            => $event,
-            'ip_address'       => request()?->ip(),
-            'user_agent'       => request()?->userAgent(),
-            'notes'            => $notes,
-            'created_at'       => now(),
+            'user_id'         => $userId,
+            'email_attempted' => $emailAttempted,
+            'event'           => $event,
+            'ip_address'      => request()->ip(),
+            'user_agent'      => request()->userAgent(),
+            'notes'           => $notes,
+            'created_at'      => now(),
         ]);
     }
-
 }
