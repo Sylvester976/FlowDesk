@@ -32,6 +32,8 @@ use App\Livewire\Oversight\AuditTrail;
 use App\Livewire\Oversight\Reports;
 use App\Http\Controllers\ReportsController;
 use App\Livewire\Auth\ForgotPassword;
+use App\Livewire\Admin\UserServiceSync;
+use App\Http\Controllers\UserServiceWebhookController;
 
 // ============================================================
 // Guest routes
@@ -128,5 +130,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/staff/{user}/edit', EditStaff::class)->name('staff.edit');
         Route::get('/org',               OrgStructureManager::class)->name('org.index');
         Route::get('/roles',             RolesManager::class)->name('roles.index');
+        Route::get('/admin/sync', UserServiceSync::class)->name('admin.sync');
     });
+
+    // Webhook — exempt from CSRF
+    Route::post('/api/webhook/user-service',
+        [UserServiceWebhookController::class, 'handle'])
+        ->name('webhook.user-service')
+        ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+
 });
