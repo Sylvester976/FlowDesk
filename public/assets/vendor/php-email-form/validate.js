@@ -78,7 +78,13 @@
 
   function displayError(thisForm, error) {
     thisForm.querySelector('.loading').classList.remove('d-block');
-    thisForm.querySelector('.error-message').innerHTML = error;
+    var message = '';
+    if (error instanceof Error) {
+      message = error.message || error.toString();
+    } else {
+      message = String(error);
+    }
+    thisForm.querySelector('.error-message').textContent = message;
     thisForm.querySelector('.error-message').classList.add('d-block');
   }
 
